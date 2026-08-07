@@ -1,0 +1,16 @@
+openai-agents
+mcp
+chromadb
+psycopg[binary]
+aio-pika
+python-dotenv
+langsmith
+pyyaml
+streamlit
+starlette<1.0
+markdown
+rank-bm25
+sentence-transformers
+diskcache
+pydantic
+tenacity

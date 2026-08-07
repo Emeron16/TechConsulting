@@ -1,0 +1,37 @@
+# Union of copilot-demo/requirements.txt and nrg-demo/requirements.txt --
+# the shell needs both demos' full dependency trees available in the same
+# venv, since either sidebar option can be selected first in a live
+# session and the other selected afterward without restarting the process.
+# See NRG_Implementation_Plan.md Phase 9 for why a separate minimal shell-
+# only venv (just streamlit+python-dotenv) doesn't work: novartis_wrapper.py
+# and nrg_wrapper.py each import their demo's full module tree at call
+# time, not just streamlit itself.
+
+# --- from copilot-demo (Novartis) ---
+openai-agents
+mcp
+chromadb
+langsmith
+starlette<1.0
+
+# --- from nrg-demo (NRG Energy) ---
+langchain
+langchain-openai
+langchain-core
+qdrant-client
+fastembed
+unstructured[pdf]
+reportlab
+
+# --- shared by both ---
+psycopg[binary]
+aio-pika
+python-dotenv
+pyyaml
+streamlit
+markdown
+rank-bm25
+sentence-transformers
+diskcache
+pydantic
+tenacity

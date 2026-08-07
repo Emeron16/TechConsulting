@@ -1,0 +1,17 @@
+langchain
+langchain-openai
+langchain-core
+qdrant-client
+fastembed
+unstructured[pdf]
+aio-pika
+psycopg[binary]
+python-dotenv
+pyyaml
+streamlit
+markdown
+pydantic
+diskcache
+tenacity
+sentence-transformers
+reportlab  # used to author the synthetic PDF sample docs in data/synthetic_docs/

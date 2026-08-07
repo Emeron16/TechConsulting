@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="doc-id" content="DEV-2024-0417-A">
+<meta name="doc-type" content="deviation">
+<meta name="doc-title" content="Deviation Investigation Report DEV-2024-0417-A">
+<meta name="doc-status" content="approved">
+<meta name="doc-effective-date" content="2024-08-16">
+<meta name="doc-version" content="1">
+<title>SYNTHETIC EXAMPLE — Fictional Deviation Record (Training Reference Only)</title>
+<style>
+  @media print {
+    .banner { position: fixed; }
+    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+  :root{
+    --paper:#fdfcf9;
+    --ink:#1a1a1a;
+    --ink-dim:#55524a;
+    --line:#c9c3b3;
+    --line-heavy:#8a8474;
+    --stamp:#a33a2f;
+    --field-bg:#f4f1e9;
+    --header-bg:#efe9d8;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background:#e7e3d8;
+    color:var(--ink);
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size:14px;
+    line-height:1.45;
+  }
+  .banner{
+    top:0; left:0; right:0;
+    background:var(--stamp);
+    color:#fff;
+    text-align:center;
+    padding:10px 16px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight:700;
+    font-size:13px;
+    letter-spacing:0.04em;
+    z-index:10;
+  }
+  .banner span{font-weight:400; letter-spacing:0.02em}
+  .sheet{
+    max-width:900px;
+    margin:56px auto 80px;
+    background:var(--paper);
+    border:1px solid var(--line-heavy);
+    box-shadow:0 2px 14px rgba(0,0,0,0.18);
+    position:relative;
+    overflow:hidden;
+  }
+  .watermark{
+    position:absolute;
+    top:44%; left:50%;
+    transform:translate(-50%,-50%) rotate(-28deg);
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:92px;
+    font-weight:800;
+    color:rgba(163,58,47,0.08);
+    white-space:nowrap;
+    pointer-events:none;
+    z-index:1;
+    user-select:none;
+  }
+  .content{position:relative; z-index:2}
+
+  .doc-header{
+    background:var(--header-bg);
+    border-bottom:2px solid var(--line-heavy);
+    padding:18px 32px;
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:8px 24px;
+  }
+  .doc-header .company{
+    font-family:Arial, Helvetica, sans-serif;
+    font-weight:800;
+    font-size:18px;
+    letter-spacing:0.02em;
+  }
+  .doc-header .company small{
+    display:block;
+    font-weight:400;
+    font-size:11px;
+    color:var(--ink-dim);
+    letter-spacing:0.06em;
+    margin-top:2px;
+  }
+  .doc-header .doc-id{
+    text-align:right;
+    font-family: 'Courier New', monospace;
+    font-size:12px;
+    color:var(--ink-dim);
+  }
+  .doc-header .title{
+    grid-column:1 / -1;
+    font-family:Arial, Helvetica, sans-serif;
+    font-weight:700;
+    font-size:15px;
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    margin-top:6px;
+    border-top:1px solid var(--line);
+    padding-top:10px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+  }
+  .severity-tag{
+    font-size:11px;
+    letter-spacing:0.06em;
+    padding:3px 10px;
+    border-radius:3px;
+    background:#c88a1a;
+    color:#fff;
+    white-space:nowrap;
+  }
+
+  .field-grid{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:1px;
+    background:var(--line);
+    border-bottom:2px solid var(--line-heavy);
+  }
+  .field{
+    background:var(--field-bg);
+    padding:8px 12px;
+  }
+  .field label{
+    display:block;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:9.5px;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    color:var(--ink-dim);
+    margin-bottom:3px;
+  }
+  .field .val{
+    font-family:'Courier New', monospace;
+    font-size:13px;
+    font-weight:700;
+  }
+
+  section.block{padding:20px 32px; border-bottom:1px solid var(--line)}
+  section.block:last-of-type{border-bottom:none}
+  .block h2{
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:12.5px;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    color:var(--ink);
+    margin:0 0 12px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .block h2 .num{
+    background:var(--ink);
+    color:var(--paper);
+    font-size:11px;
+    width:20px;height:20px;
+    display:inline-flex;align-items:center;justify-content:center;
+    border-radius:2px;
+  }
+  .block p{margin:0 0 10px}
+  .block p:last-child{margin-bottom:0}
+
+  table{width:100%; border-collapse:collapse; font-size:12.5px}
+  th,td{border:1px solid var(--line); padding:6px 8px; text-align:left; vertical-align:top}
+  th{
+    background:var(--header-bg);
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    color:var(--ink-dim);
+  }
+  td.num-cell{font-family:'Courier New', monospace; white-space:nowrap}
+
+  .sign-block{line-height:1.3}
+  .sign-block .sig{
+    font-family:'Brush Script MT', cursive;
+    color:#2a4a7a;
+    font-size:15px;
+  }
+  .sign-block .printed{
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:10px;
+    color:var(--ink-dim);
+  }
+  .sign-blank{color:var(--ink-dim); font-family:Arial, sans-serif; font-size:11px; font-style:italic}
+
+  .signoff-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
+    margin-top:8px;
+  }
+  .signoff{
+    border:1px solid var(--line);
+    padding:12px;
+    background:var(--field-bg);
+  }
+  .signoff label{
+    display:block;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:9.5px;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    color:var(--ink-dim);
+    margin-bottom:6px;
+  }
+  .signoff .line{
+    border-bottom:1px solid var(--ink-dim);
+    min-height:26px;
+    display:flex;
+    align-items:flex-end;
+    padding-bottom:2px;
+  }
+  .signoff .meta{
+    font-family:'Courier New', monospace;
+    font-size:10.5px;
+    color:var(--ink-dim);
+    margin-top:5px;
+  }
+
+  .rca-fishbone{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:10px;
+  }
+  .rca-cat{
+    border:1px solid var(--line);
+    padding:10px 12px;
+    background:var(--field-bg);
+  }
+  .rca-cat .cat-label{
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:10px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    color:var(--ink-dim);
+    margin-bottom:4px;
+  }
+  .rca-cat.root{border-color:var(--stamp); background:#fbf3f1}
+  .rca-cat.root .cat-label{color:var(--stamp)}
+
+  .capa-box{
+    border:2px solid var(--line-heavy);
+    padding:14px 16px;
+  }
+  .capa-item{
+    display:grid;
+    grid-template-columns:90px 1fr;
+    gap:4px 12px;
+    margin-bottom:8px;
+    font-size:12.5px;
+  }
+  .capa-item:last-child{margin-bottom:0}
+  .capa-item .k{
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    color:var(--ink-dim);
+  }
+
+  .impact-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+  }
+  .impact-grid .field .val{font-size:12px; font-weight:400; font-family:Arial, Helvetica, sans-serif}
+
+  .final-block{
+    background:var(--header-bg);
+    border-top:3px double var(--line-heavy);
+    padding:20px 32px;
+    max-width:900px;
+    margin:-1px auto 0;
+    border-left:1px solid var(--line-heavy);
+    border-right:1px solid var(--line-heavy);
+  }
+  .stamp-area{
+    display:flex;
+    justify-content:flex-end;
+    margin-top:10px;
+  }
+  .stamp{
+    border:3px solid var(--stamp);
+    color:var(--stamp);
+    font-family:Arial, Helvetica, sans-serif;
+    font-weight:800;
+    font-size:15px;
+    letter-spacing:0.08em;
+    padding:8px 18px;
+    transform:rotate(-4deg);
+    border-radius:4px;
+    opacity:0.85;
+  }
+
+  .footer-note{
+    max-width:900px;
+    margin:0 auto 60px;
+    padding:0 16px;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:11.5px;
+    color:#6b6b6b;
+    text-align:center;
+  }
+</style>
+</head>
+<body>
+
+<div class="banner">
+  SYNTHETIC EXAMPLE — NOT A REAL DEVIATION RECORD <span>· fictional company, product, and personnel · for structural/educational reference only</span>
+</div>
+
+<div class="sheet">
+  <div class="watermark">SPECIMEN</div>
+  <div class="content">
+
+    <div class="doc-header">
+      <div class="company">
+        AURELIA PHARMA SCIENCES <small>(fictional company — not affiliated with any real manufacturer)</small>
+      </div>
+      <div class="doc-id">
+        DEV-2024-0417-A<br>Rev. 0 · Page 1 of 1 (excerpt)
+      </div>
+      <div class="title">
+        <span>Deviation Investigation Report</span>
+        <span class="severity-tag">MINOR — WITHIN ACTION LIMIT</span>
+      </div>
+    </div>
+
+    <div class="field-grid">
+      <div class="field"><label>Deviation No.</label><div class="val">DEV-2024-0417-A</div></div>
+      <div class="field"><label>Related Batch / Lot</label><div class="val">L-24Q3-0417</div></div>
+      <div class="field"><label>Product</label><div class="val">Metforalex XR 500 mg</div></div>
+      <div class="field"><label>Date Detected</label><div class="val">14-Aug-2024, 10:15</div></div>
+
+      <div class="field"><label>Detected By</label><div class="val">T. Naicker (Operator)</div></div>
+      <div class="field"><label>Related BMR Ref.</label><div class="val">BMR-77214-Rev.C, Step 5</div></div>
+      <div class="field"><label>Process Area</label><div class="val">Suite 4B — Blending, BLN-03</div></div>
+      <div class="field"><label>Classification</label><div class="val">Minor · Non-CPP excursion within action limit</div></div>
+    </div>
+
+    <section class="block">
+      <h2><span class="num">1</span>Description of Event</h2>
+      <p>
+        During Step 5 (final blend of extragranular excipients) of Batch Manufacturing Record BMR-77214-Rev.C,
+        the in-process blend uniformity check returned a relative standard deviation (RSD) of <strong>4.6%</strong>
+        against a target specification of <strong>≤ 3.0% RSD</strong>. The result remained within the qualified
+        action limit of 5.0% RSD but exceeded the routine target range, triggering this deviation record per
+        SOP-114 §6.2 (Blend Uniformity Excursion Handling).
+      </p>
+      <p>
+        No other in-process parameters for this batch were out of specification at the time of detection.
+        Compression (Step 6) had not yet begun; the batch was placed on quality hold pending investigation
+        before proceeding.
+      </p>
+    </section>
+
+    <section class="block">
+      <h2><span class="num">2</span>Immediate Actions Taken</h2>
+      <table>
+        <thead>
+          <tr><th style="width:110px">Time</th><th>Action</th><th>By</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="num-cell">10:15</td><td>Blend result flagged by operator; production paused at Step 5/6 boundary</td><td class="sign-cell">T. Naicker</td></tr>
+          <tr><td class="num-cell">10:22</td><td>Shift supervisor notified; batch placed on quality hold (no compression start)</td><td class="sign-cell">D. Kowalczyk</td></tr>
+          <tr><td class="num-cell">10:40</td><td>QA notified per SOP-114; deviation record opened</td><td class="sign-cell">S. Whitfield</td></tr>
+          <tr><td class="num-cell">11:05</td><td>Retain blend sample pulled for confirmatory content-uniformity testing</td><td class="sign-cell">P. Ansah</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="block">
+      <h2><span class="num">3</span>Root Cause Analysis</h2>
+      <p style="font-size:12px; color:var(--ink-dim); margin-bottom:12px;">Method: Structured cause-category review (Ishikawa) plus 5-Why, conducted 14–15 Aug 2024.</p>
+      <div class="rca-fishbone">
+        <div class="rca-cat">
+          <div class="cat-label">Method / Process</div>
+          Blend-to-compression hold time reached 38 min; SOP-114 §4.3 guidance target is ≤ 30 min to limit
+          settling/de-mixing of the extragranular blend prior to compression feed.
+        </div>
+        <div class="rca-cat">
+          <div class="cat-label">Man / Personnel</div>
+          No procedural deviation by operators — dispensing and blend steps executed per SOP; delay
+          originated downstream of blend completion (press changeover queue), not operator error.
+        </div>
+        <div class="rca-cat">
+          <div class="cat-label">Machine / Equipment</div>
+          Tablet press TP-07 was completing changeover from a prior product line at time of blend
+          completion, extending the queue time before blend could be fed to compression.
+        </div>
+        <div class="rca-cat">
+          <div class="cat-label">Materials</div>
+          Material lots (API, MCC, Mg stearate) within specification on incoming release; no
+          material-attributable contribution identified.
+        </div>
+        <div class="rca-cat root" style="grid-column:1 / -1;">
+          <div class="cat-label">Root Cause (5-Why terminus)</div>
+          Press changeover scheduling did not account for blend hold-time sensitivity — the production
+          schedule sequenced TP-07 changeover to overlap with, rather than precede, blend completion,
+          resulting in an 8-minute hold-time overrun beyond SOP-114 guidance.
+        </div>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2><span class="num">4</span>Impact Assessment</h2>
+      <div class="impact-grid">
+        <div class="field"><label>Product Quality</label><div class="val">No impact — compressed tablet content uniformity (Step 6 IPC) confirmed within spec; retain sample confirmatory result pending, expected by 19-Aug-2024.</div></div>
+        <div class="field"><label>Other Batches</label><div class="val">None — hold-time overrun isolated to this batch's press queue; no recurring pattern found in prior 6 months of blend-uniformity trend data.</div></div>
+        <div class="field"><label>Regulatory Reporting</label><div class="val">Not reportable — within qualified action limit, no confirmed OOS, no product released outside specification.</div></div>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2><span class="num">5</span>Disposition</h2>
+      <p>
+        <strong>Batch L-24Q3-0417 released to compression</strong> based on: (a) RSD result within the
+        qualified 5.0% action limit, (b) Step 6 compressed-tablet content uniformity IPC passing, and
+        (c) no material or equipment root cause affecting product quality. Final batch disposition remains
+        subject to QP review of the complete BMR and confirmatory retain-sample results.
+      </p>
+    </section>
+
+    <section class="block">
+      <h2><span class="num">6</span>CAPA Reference</h2>
+      <div class="capa-box">
+        <div class="capa-item"><span class="k">CAPA No.</span><span>CAPA-2024-0417</span></div>
+        <div class="capa-item"><span class="k">Corrective</span><span>Retrain Suite 4B production scheduling staff on SOP-114 §4.3 blend hold-time limits; add hold-time as a scheduling constraint field in the production planning tool.</span></div>
+        <div class="capa-item"><span class="k">Preventive</span><span>Add automated hold-time countdown alert to MES at blend completion, flagging shift lead if projected press availability exceeds 30 min.</span></div>
+        <div class="capa-item"><span class="k">Owner</span><span>D. Kowalczyk (Production Supervisor)</span></div>
+        <div class="capa-item"><span class="k">Due Date</span><span>30-Sep-2024</span></div>
+        <div class="capa-item"><span class="k">Effectiveness Check</span><span>Review blend-to-compression hold times for next 10 batches on this line; target zero excursions above 30 min.</span></div>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2><span class="num">7</span>Approvals</h2>
+      <div class="signoff-grid">
+        <div class="signoff">
+          <label>Investigator</label>
+          <div class="line sign-block"><div class="sig">P. Ansah</div></div>
+          <div class="meta">
+            Printed: Priscilla Ansah<br>
+            Role: QA Investigator<br>
+            15-Aug-2024 · 16:20
+          </div>
+        </div>
+        <div class="signoff">
+          <label>QA Approval</label>
+          <div class="line sign-block"><div class="sig">S. Whitfield</div></div>
+          <div class="meta">
+            Printed: Sarah Whitfield<br>
+            Role: QA Reviewer, Batch Disposition<br>
+            16-Aug-2024 · 08:55
+          </div>
+        </div>
+        <div class="signoff">
+          <label>Qualified Person (QP)</label>
+          <div class="line sign-blank">— pending final release —</div>
+          <div class="meta">
+            Role: Qualified Person, GxP Release Authority<br>
+            21 CFR Part 11 e-signature required
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<div class="final-block">
+  <div style="font-family:Arial, Helvetica, sans-serif;font-size:11px;color:var(--ink-dim);text-transform:uppercase;letter-spacing:0.05em;">
+    Record Status
+  </div>
+  <div style="font-family:Arial, Helvetica, sans-serif;font-weight:700;font-size:14px;margin-top:4px;">
+    Investigation closed — CAPA-2024-0417 open, effectiveness check pending
+  </div>
+  <div class="stamp-area">
+    <div class="stamp">SPECIMEN</div>
+  </div>
+</div>
+
+<p class="footer-note">
+  This is a wholly fictional document generated for training/reference purposes: the company, product, personnel,
+  batch numbers, and findings are invented and do not describe any real deviation, product, or organization.
+  Cross-referenced against a companion synthetic batch record (BMR-77214-Rev.C) for structural consistency only.
+  Do not use as evidence of GMP compliance or as a template submitted to any regulatory body.
+</p>
+
+</body>
+</html>
