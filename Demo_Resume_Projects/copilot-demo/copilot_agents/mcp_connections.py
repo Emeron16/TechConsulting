@@ -71,3 +71,15 @@ def capa_server() -> MCPServerStdio:
         },
         client_session_timeout_seconds=TOOL_TIMEOUT_SECONDS,
     )
+
+
+def deviation_server() -> MCPServerStdio:
+    return MCPServerStdio(
+        name="deviation-management",
+        params={
+            "command": sys.executable,
+            "args": ["-m", "mcp_servers.deviation_server"],
+            "cwd": str(ROOT),
+        },
+        client_session_timeout_seconds=TOOL_TIMEOUT_SECONDS,
+    )

@@ -3,6 +3,7 @@ mcp
 chromadb
 psycopg[binary]
 aio-pika
+bcrypt
 python-dotenv
 langsmith
 pyyaml

@@ -1,0 +1,55 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: volvo-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-volvo}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-volvo_local_dev}
+      POSTGRES_DB: ${POSTGRES_DB:-volvo_warranty}
+    ports:
+      - "${POSTGRES_PORT:-5434}:5432"
+    volumes:
+      - volvo_postgres_data:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-volvo} -d ${POSTGRES_DB:-volvo_warranty}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  opensearch:
+    image: opensearchproject/opensearch:2
+    container_name: volvo-opensearch
+    restart: unless-stopped
+    environment:
+      discovery.type: single-node
+      DISABLE_SECURITY_PLUGIN: "true"
+      DISABLE_INSTALL_DEMO_CONFIG: "true"
+      OPENSEARCH_JAVA_OPTS: "-Xms512m -Xmx512m"
+    ports:
+      - "${OPENSEARCH_PORT:-9201}:9200"
+      - "9600:9600"
+    volumes:
+      - volvo_opensearch_data:/usr/share/opensearch/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s http://localhost:9200/_cluster/health | grep -q '\"status\":\"\\(green\\|yellow\\)\"'"]
+      interval: 10s
+      timeout: 10s
+      retries: 20
+
+  opensearch-dashboards:
+    image: opensearchproject/opensearch-dashboards:2
+    container_name: volvo-opensearch-dashboards
+    restart: unless-stopped
+    environment:
+      OPENSEARCH_HOSTS: '["http://opensearch:9200"]'
+      DISABLE_SECURITY_DASHBOARDS_PLUGIN: "true"
+    ports:
+      - "${OPENSEARCH_DASHBOARDS_PORT:-9301}:5601"
+    depends_on:
+      - opensearch
+
+volumes:
+  volvo_postgres_data:
+  volvo_opensearch_data:

@@ -214,9 +214,19 @@ def get_document_content(doc_id: str, version: int | None = None) -> tuple[str, 
 
 
 def soft_delete_document(doc_id: str, deleted_by: str) -> tuple[bool, str]:
-    """Marks the active kb_documents row 'deleted' and removes its chunks
-    from Chroma (so it stops being retrieved) -- file on disk and the
-    Postgres row remain for audit/undo.
+    """Removes doc_id from search/retrieval. Two cases, matching the same
+    kb_documents-row-or-not split get_document_content() already handles:
+
+    - GUI-uploaded (has an active kb_documents row): soft delete -- marks
+      the row 'deleted' and removes its Chroma chunks. File on disk and
+      the Postgres row remain for audit/undo.
+    - Bulk-ingested via scripts/ingest.py (no kb_documents row -- no
+      version history or upload provenance ever existed for it): hard
+      delete from Chroma only, since there's no Postgres row to soft-
+      delete or 'undo' to preserve. The source file under
+      data/synthetic_docs/ is untouched, so re-running scripts/ingest.py
+      --full would bring it back -- this only removes it from the live
+      searchable collection, not the corpus on disk.
     """
     with get_pg_connection() as conn, conn.cursor() as cur:
         cur.execute(
@@ -224,19 +234,24 @@ def soft_delete_document(doc_id: str, deleted_by: str) -> tuple[bool, str]:
             (doc_id,),
         )
         row = cur.fetchone()
-        if row is None:
-            return False, f"No active document found for doc_id={doc_id!r}"
-
-        cur.execute("UPDATE kb_documents SET status = 'deleted' WHERE id = %s", (row[0],))
-        conn.commit()
+        if row is not None:
+            cur.execute("UPDATE kb_documents SET status = 'deleted' WHERE id = %s", (row[0],))
+            conn.commit()
 
     collection = get_chroma_collection()
     existing = collection.get(where={"doc_id": doc_id})
-    if existing["ids"]:
-        collection.delete(ids=existing["ids"])
+    if not existing["ids"]:
+        return False, f"No document found for doc_id={doc_id!r}"
+
+    collection.delete(ids=existing["ids"])
     refresh_search_indexes(collection)
 
-    return True, f"{doc_id} (v{row[1]}) marked deleted by {deleted_by}, removed from search."
+    if row is not None:
+        return True, f"{doc_id} (v{row[1]}) marked deleted by {deleted_by}, removed from search."
+    return True, (
+        f"{doc_id} removed from search by {deleted_by} (bulk-ingested document -- no version "
+        "history to preserve; source file on disk is unchanged)."
+    )
 
 
 def ingest_document_and_collect(file_bytes: bytes, filename: str, uploaded_by: str):

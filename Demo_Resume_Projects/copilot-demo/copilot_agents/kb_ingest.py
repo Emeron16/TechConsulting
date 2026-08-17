@@ -25,10 +25,15 @@ from chromadb.utils import embedding_functions
 from copilot_agents.cache import CachedEmbeddingFunction, invalidate_retrieval_cache
 from mcp_servers.common import get_pg_connection
 
-CHROMA_DIR = os.environ.get("CHROMA_PERSIST_DIR", "./chroma_db")
+_ROOT = Path(__file__).parent.parent
+# Resolved against this project's root, not the process's cwd -- see
+# mcp_servers/common.py's CHROMA_DIR comment for why (a caller launched
+# from a different cwd, e.g. shell/novartis_wrapper.py, would otherwise
+# silently open/create an empty chroma_db/ elsewhere).
+CHROMA_DIR = str(_ROOT / os.environ.get("CHROMA_PERSIST_DIR", "./chroma_db"))
 COLLECTION_NAME = "quality_documents"
 EMBEDDING_MODEL = "text-embedding-3-small"
-DOCS_DIR = Path(__file__).parent.parent / "data" / "synthetic_docs"
+DOCS_DIR = _ROOT / "data" / "synthetic_docs"
 CHUNK_SIZE = 800
 CHUNK_OVERLAP = 100
 
@@ -210,6 +215,20 @@ def _get_active_version(cur, doc_id: str) -> tuple | None:
     return cur.fetchone()
 
 
+def _get_max_version(cur, doc_id: str) -> int | None:
+    """Highest version number ever used for doc_id, across ALL statuses
+    (active, superseded, AND deleted) -- version numbers are never reused.
+    Without this, re-uploading a doc whose only row was soft-deleted (see
+    mcp_servers/kb_actions.py's soft_delete_document) would compute
+    new_version=1 again (since _get_active_version finds no active row) and
+    collide with the deleted row's still-occupied (doc_id, version) unique
+    constraint.
+    """
+    cur.execute("SELECT MAX(version) FROM kb_documents WHERE doc_id = %s", (doc_id,))
+    row = cur.fetchone()
+    return row[0] if row else None
+
+
 def ingest_document(
     file_bytes: bytes, filename: str, uploaded_by: str
 ) -> Generator[IngestStep, None, KBDocument]:
@@ -236,7 +255,16 @@ def ingest_document(
 
     yield IngestStep("chunking", {"doc_id": doc_id})
     chunks = chunk_text(body)
-    yield IngestStep("chunking", {"doc_id": doc_id, "chunk_count": len(chunks)})
+    yield IngestStep(
+        "chunking",
+        {
+            "doc_id": doc_id,
+            "chunk_count": len(chunks),
+            "strategy": "fixed-size character window",
+            "chunk_size": CHUNK_SIZE,
+            "overlap": CHUNK_OVERLAP,
+        },
+    )
 
     conn = get_pg_connection()
     try:
@@ -267,9 +295,9 @@ def ingest_document(
                     is_new_version=False,
                 )
 
-            new_version = 1
+            max_version = _get_max_version(cur, doc_id)
+            new_version = (max_version or 0) + 1
             if active is not None:
-                new_version = active[1] + 1
                 cur.execute("UPDATE kb_documents SET status = 'superseded' WHERE id = %s", (active[0],))
                 yield IngestStep(
                     "versioning",
@@ -277,6 +305,16 @@ def ingest_document(
                         "doc_id": doc_id,
                         "outcome": "new_version",
                         "previous_version": active[1],
+                        "new_version": new_version,
+                    },
+                )
+            elif max_version is not None:
+                yield IngestStep(
+                    "versioning",
+                    {
+                        "doc_id": doc_id,
+                        "outcome": "new_version",
+                        "reason": "prior version(s) exist but none are active (e.g. soft-deleted)",
                         "new_version": new_version,
                     },
                 )

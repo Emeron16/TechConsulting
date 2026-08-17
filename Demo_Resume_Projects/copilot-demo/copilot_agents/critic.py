@@ -34,16 +34,17 @@ class RunContext:
     retrieved_docs: full SearchResult objects (with excerpt text) from
       search_* tool calls.
     structured_lookups: raw JSON payloads from non-search tool calls
-      (get_batch_metadata, get_capa_status, get_sop_by_id, create_capa_draft)
-      -- these carry facts (disposition_status, deviation classification,
-      CAPA monitoring window, etc.) that never appear as SearchResult
-      excerpts, so without this the LLM critic would be checking answers
-      against a source-text pool that's missing most of what the answering
-      agent actually saw.
+      (get_batch_metadata, get_capa_status, get_sop_by_id, create_capa_draft,
+      create_deviation_disposition) -- these carry facts (disposition_status,
+      deviation classification, CAPA monitoring window, etc.) that never
+      appear as SearchResult excerpts, so without this the LLM critic would
+      be checking answers against a source-text pool that's missing most of
+      what the answering agent actually saw.
     seen_record_ids: every identifier the agent could legitimately have
       learned about from ANY tool call this run -- SearchResult.doc_id,
       but also BatchMetadata.batch_id + its nested deviation_ids,
-      CapaStatus.capa_id, SopDocument.doc_id, CapaDraft.draft_capa_id.
+      CapaStatus.capa_id, SopDocument.doc_id, CapaDraft.draft_capa_id,
+      DeviationDispositionDraft.draft_deviation_id.
       This is what citations are actually checked against: a citation to
       an ID surfaced by a structured lookup (e.g. a deviation_id nested in
       get_batch_metadata's response) is just as grounded as one from a
@@ -88,7 +89,15 @@ class RunContext:
 # Keys, per tool-output shape, whose values are IDs the agent may
 # legitimately cite -- checked in order; a payload can match multiple
 # shapes' key sets loosely, so all matching ID fields are collected.
-_ID_FIELD_NAMES = ("doc_id", "batch_id", "deviation_id", "capa_id", "draft_capa_id", "related_deviation_id")
+_ID_FIELD_NAMES = (
+    "doc_id",
+    "batch_id",
+    "deviation_id",
+    "capa_id",
+    "draft_capa_id",
+    "draft_deviation_id",
+    "related_deviation_id",
+)
 
 
 class RecordingHooks(RunHooks[RunContext]):
@@ -98,9 +107,9 @@ class RecordingHooks(RunHooks[RunContext]):
       - full SearchResult objects into context.context.retrieved_docs
         (only search_* tools return this shape)
       - everything else (get_batch_metadata/get_capa_status/get_sop_by_id/
-        create_capa_draft payloads) into context.context.structured_lookups,
-        so the LLM critic can see the same facts the answering agent saw,
-        not just search excerpts
+        create_capa_draft/create_deviation_disposition payloads) into
+        context.context.structured_lookups, so the LLM critic can see the
+        same facts the answering agent saw, not just search excerpts
       - every ID-shaped field value (doc_id, batch_id, deviation_id, etc.,
         including nested ones like BatchMetadata.deviations[].deviation_id)
         into context.context.seen_record_ids, recursively, so any

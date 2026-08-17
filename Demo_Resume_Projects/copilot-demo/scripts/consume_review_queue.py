@@ -41,10 +41,12 @@ async def main() -> None:
                     break
                 async with message.process():
                     payload = json.loads(message.body.decode())
+                    structured_payload = payload.get("structured_payload")
                     cur.execute(
                         """
-                        INSERT INTO review_queue (question, draft_answer, citations, agent_name)
-                        VALUES (%s, %s, %s, %s)
+                        INSERT INTO review_queue (question, draft_answer, citations, agent_name,
+                                                   linked_record_type, linked_record_id, structured_payload)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s)
                         RETURNING id
                         """,
                         (
@@ -52,6 +54,9 @@ async def main() -> None:
                             payload["draft_answer"],
                             json.dumps([]),
                             payload["agent_name"],
+                            payload.get("linked_record_type"),
+                            payload.get("linked_record_id"),
+                            json.dumps(structured_payload) if structured_payload is not None else None,
                         ),
                     )
                     review_id = cur.fetchone()[0]

@@ -28,6 +28,7 @@ from copilot_agents.diagram_common import (
     esc,
     parallel_label,
     placeholder,
+    print_button,
     retrieval_badge,
     score_table,
     stage,
@@ -149,7 +150,7 @@ def render_flow_html(ask_result: AskResult, question: str, review_status: dict |
     dict like {"status": "pending"|"approved"|"rejected", "reviewed_by": ...,
     "reason": ...} looked up by the caller (see streamlit_app.py).
     """
-    parts: list[str] = [CSS, '<div class="flow-wrap"><div class="flow-col">']
+    parts: list[str] = [CSS, '<div class="flow-wrap">', print_button(), '<div class="flow-col">']
 
     # -- Auth / Gateway placeholder band (precedes everything, per original architecture)
     parts.append(f'<div class="band-label">{esc("API & Identity Layer (original architecture)")}</div>')

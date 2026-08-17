@@ -29,6 +29,7 @@ from copilot_agents.ingest_flow_diagram import render_ingest_flow_html
 from copilot_agents.kb_ingest import ingest_document
 from copilot_agents.tracing_setup import enable_langsmith_tracing
 from mcp_servers.audit import verify_chain
+from mcp_servers.auth import list_active_qp_users
 from mcp_servers.common import get_pg_connection
 from mcp_servers.kb_actions import (
     get_document_content,
@@ -81,6 +82,7 @@ def render() -> None:
             "What is the current status and monitoring window for CAPA-3390?",
             "What does SOP-089 say about releasing a batch with an open deviation?",
             "What is the disposition status of BATCH-4471?",
+            "Draft a CAPA for deviation DEV-2144 addressing the root cause and proposing a corrective action.",
         ]
         selected_example = st.selectbox(
             "Try an example question, or type your own below:",
@@ -230,8 +232,21 @@ def render() -> None:
         except ValueError as e:
             st.error(str(e))
 
-        if active_version and (selected_version is None or selected_version == active_version["version"]):
-            st.warning("Deleting removes this document from search/retrieval. The file and version history are kept for audit purposes.")
+        can_delete = (not versions) or (
+            active_version and (selected_version is None or selected_version == active_version["version"])
+        )
+        if can_delete:
+            if versions:
+                st.warning(
+                    "Deleting removes this document from search/retrieval. The file and version "
+                    "history are kept for audit purposes."
+                )
+            else:
+                st.warning(
+                    "Deleting removes this document from search/retrieval. It's bulk-ingested "
+                    "(no version history record), so the source file under data/synthetic_docs/ "
+                    "is left untouched -- re-running scripts/ingest.py --full would bring it back."
+                )
             deleted_by = st.text_input("Deleted by", value="KB Curator", key="kb_delete_by")
             if st.button("Delete this document", type="secondary", key="kb_delete_btn"):
                 ok, msg = soft_delete_document(doc_id, deleted_by.strip() or "Unknown")
@@ -239,12 +254,6 @@ def render() -> None:
                 if ok:
                     st.session_state.selected_kb_doc = None
                     st.rerun()
-        elif not versions:
-            st.caption(
-                "This document has no kb_documents version record, so it can't be deleted through "
-                "the GUI yet -- remove it from data/synthetic_docs/ and re-run scripts/ingest.py "
-                "--full to remove it from the corpus."
-            )
 
     with tab_kb:
         st.subheader("Knowledge base")
@@ -258,6 +267,10 @@ def render() -> None:
         kb_browse_tab, kb_upload_tab = st.tabs(["Browse / Search / Manage", "Upload"])
 
         with kb_browse_tab:
+            if "kb_browse_flash" in st.session_state:
+                flash_kind, flash_message = st.session_state.pop("kb_browse_flash")
+                (st.success if flash_kind == "success" else st.error)(flash_message)
+
             kb_query = st.text_input("Search (leave blank to browse all documents)", key="kb_search_query")
 
             if kb_query.strip():
@@ -304,11 +317,37 @@ def render() -> None:
                     )
                     doc_ids = [d["doc_id"] for d in page_docs]
                     selected_doc_id = st.selectbox("Select a document to view/manage", doc_ids, key="kb_browse_select")
+
                     if st.button("Open in viewer", key="kb_open_viewer"):
                         st.session_state.selected_kb_doc = selected_doc_id
                         st.rerun()
 
+                    st.caption(
+                        "Deleting removes the document from search/retrieval. For GUI-uploaded "
+                        "documents the file and version history are kept for audit purposes; "
+                        "bulk-ingested corpus documents have no version history to preserve, so "
+                        "this only removes them from the live search index, not from disk."
+                    )
+                    col_delete_by, col_confirm, col_delete_btn = st.columns([2, 2, 1])
+                    deleted_by = col_delete_by.text_input(
+                        "Deleted by", value="KB Curator", key="kb_browse_deleted_by"
+                    )
+                    confirm_delete = col_confirm.checkbox(
+                        f"Confirm delete of {selected_doc_id}", key=f"kb_confirm_delete_{selected_doc_id}"
+                    )
+                    if col_delete_btn.button(
+                        "Delete", key="kb_browse_delete_btn", type="secondary", disabled=not confirm_delete
+                    ):
+                        ok, msg = soft_delete_document(selected_doc_id, deleted_by.strip() or "Unknown")
+                        st.session_state["kb_browse_flash"] = ("success" if ok else "error", msg)
+                        st.rerun()
+
         with kb_upload_tab:
+            if "kb_ingest_flash" in st.session_state:
+                flash_kind, flash_message = st.session_state.pop("kb_ingest_flash")
+                (st.success if flash_kind == "success" else st.error)(flash_message)
+                st.info("See the **Flow** tab's Ingestion runs for the full step-by-step trace.")
+
             uploaded_file = st.file_uploader("Upload a document (.md or .html)", type=["md", "html"])
             uploaded_by = st.text_input("Uploaded by", value="KB Curator", key="kb_uploaded_by")
 
@@ -349,10 +388,23 @@ def render() -> None:
                         state="complete",
                     )
                     if result.is_new_version:
-                        st.success(f"{result.doc_id} ingested as version {result.version}.")
+                        kb_message = f"{result.doc_id} ingested as version {result.version}."
                     else:
-                        st.info(f"{result.doc_id}: identical content already active as version {result.version} -- nothing changed.")
-                    st.info("See the **Flow** tab's Ingestion runs for the full step-by-step trace.")
+                        kb_message = (
+                            f"{result.doc_id}: identical content already active as version "
+                            f"{result.version} -- nothing changed."
+                        )
+                    # Selecting this run for the Flow tab (above) only takes effect on
+                    # the NEXT script run -- st.tabs renders every tab in one pass, and
+                    # the Flow tab has already rendered (from before this click) by the
+                    # time this handler runs. Without an explicit rerun, the user stays
+                    # on a stale Flow tab render until some unrelated interaction
+                    # happens to trigger the next one. Stash the message in
+                    # session_state (same "flash" pattern as the Review Queue's
+                    # approve/reject) so it survives the rerun instead of vanishing
+                    # with this now-discarded script pass.
+                    st.session_state["kb_ingest_flash"] = ("success", kb_message)
+                    st.rerun()
 
         # -- Viewer dialog: opens as a full modal overlay (not inline below the
         # list) whenever a document is selected from Search or Browse above.
@@ -379,6 +431,10 @@ def render() -> None:
         if st.button("Refresh queue"):
             st.rerun()
 
+        if "review_flash" in st.session_state:
+            flash_kind, flash_message = st.session_state.pop("review_flash")
+            (st.success if flash_kind == "success" else st.error)(flash_message)
+
         pending = list_pending()
         if not pending:
             st.write("No pending items.")
@@ -387,35 +443,73 @@ def render() -> None:
                 with st.container(border=True):
                     st.markdown(f"**#{item['id']}** — {item['agent_name']} — _{item['created_at']}_")
                     st.markdown(f"**Question:** {item['question']}")
+                    if item.get("linked_record_type"):
+                        st.markdown(
+                            f"**Linked record:** `{item['linked_record_type']}` → `{item['linked_record_id']}`"
+                        )
+                        with st.expander(f"Proposed {item['linked_record_type']} details", expanded=True):
+                            st.json(item["structured_payload"])
                     with st.expander("Draft answer"):
                         st.markdown(item["draft_answer"])
 
-                    col1, col2, col3 = st.columns([2, 2, 3])
-                    reviewer_name = col1.text_input(
-                        "Reviewer name", key=f"reviewer_{item['id']}", value="Jane QP Reviewer"
-                    )
-                    if col2.button("Approve", key=f"approve_{item['id']}"):
-                        if reviewer_name.strip():
-                            success, message, audit_id = approve(item["id"], reviewer_name.strip())
-                            (st.success if success else st.error)(message)
-                            if success:
-                                st.caption(f"E-signature recorded — audit_log id={audit_id}")
-                            st.rerun()
-                        else:
-                            st.warning("Enter a reviewer name first.")
+                    qp_users = list_active_qp_users()
+                    if not qp_users:
+                        st.error("No active QP accounts configured -- cannot sign. See db/init/04_qp_users.sql.")
+                    else:
+                        st.caption(
+                            "Approving or rejecting is an electronic signature -- re-enter your "
+                            "password to sign, regardless of whether you're already logged in "
+                            "(21 CFR Part 11 requires re-authentication at the moment of signing)."
+                        )
+                        col1, col2 = st.columns([2, 2])
+                        signer_username = col1.selectbox(
+                            "Signing as",
+                            options=[u.username for u in qp_users],
+                            format_func=lambda u: next(
+                                (qu.display_name for qu in qp_users if qu.username == u), u
+                            ),
+                            key=f"signer_{item['id']}",
+                        )
+                        signer_password = col2.text_input(
+                            "Password", type="password", key=f"password_{item['id']}"
+                        )
 
-                    reason = col3.text_input("Rejection reason (if rejecting)", key=f"reason_{item['id']}")
-                    if col3.button("Reject", key=f"reject_{item['id']}"):
-                        if reviewer_name.strip() and reason.strip():
-                            success, message, audit_id = reject(
-                                item["id"], reviewer_name.strip(), reason.strip()
-                            )
-                            (st.success if success else st.error)(message)
-                            if success:
-                                st.caption(f"Rejection recorded — audit_log id={audit_id}")
-                            st.rerun()
-                        else:
-                            st.warning("Reviewer name and rejection reason are both required.")
+                        col3, col4 = st.columns([2, 3])
+                        if col3.button("Approve (sign)", key=f"approve_{item['id']}"):
+                            if signer_password.strip():
+                                success, message, audit_id = approve(
+                                    item["id"], signer_username, signer_password
+                                )
+                                if success:
+                                    st.session_state["review_flash"] = (
+                                        "success",
+                                        f"{message} (audit_log id={audit_id})",
+                                    )
+                                    st.rerun()
+                                else:
+                                    # Signature failed (e.g. wrong password) -- do NOT rerun, so
+                                    # this error is actually visible instead of being wiped by
+                                    # the immediate rerun before it can render.
+                                    st.error(message)
+                            else:
+                                st.warning("Enter your password to sign.")
+
+                        reason = col4.text_input("Rejection reason (if rejecting)", key=f"reason_{item['id']}")
+                        if col4.button("Reject (sign)", key=f"reject_{item['id']}"):
+                            if signer_password.strip() and reason.strip():
+                                success, message, audit_id = reject(
+                                    item["id"], signer_username, signer_password, reason.strip()
+                                )
+                                if success:
+                                    st.session_state["review_flash"] = (
+                                        "success",
+                                        f"{message} (audit_log id={audit_id})",
+                                    )
+                                    st.rerun()
+                                else:
+                                    st.error(message)
+                            else:
+                                st.warning("Password and rejection reason are both required to sign.")
 
         st.subheader("Recent history")
         history = list_history()
@@ -429,6 +523,7 @@ def render() -> None:
                         "Agent": h["agent_name"],
                         "Question": h["question"][:60],
                         "Status": h["status"],
+                        "Linked record": f"{h.get('linked_record_type') or '-'}:{h.get('linked_record_id') or '-'}",
                         "Reviewed by": h["reviewed_by"],
                         "Reviewed at": h["reviewed_at"],
                     }

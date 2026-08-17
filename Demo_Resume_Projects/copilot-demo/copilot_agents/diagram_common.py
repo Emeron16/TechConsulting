@@ -10,11 +10,26 @@ CSS = """
 <style>
   * { box-sizing: border-box; }
   .flow-wrap {
+    position: relative;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     color: #1a1a1a;
     background: #fafafa;
     padding: 24px;
     border-radius: 12px;
+  }
+  .print-button {
+    position: absolute; top: 16px; right: 16px; z-index: 30;
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: inherit; font-size: 12px; font-weight: 600;
+    background: #ffffff; color: #374151; border: 1px solid #d1d5db;
+    border-radius: 6px; padding: 6px 12px; cursor: pointer;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+  }
+  .print-button:hover { background: #f3f4f6; }
+  @media print {
+    .print-button { display: none; }
+    .flow-wrap { background: #fff; box-shadow: none; }
+    .retrieval-tooltip { display: none !important; }
   }
   .flow-col { display: flex; flex-direction: column; align-items: center; gap: 4px; }
   .arrow {
@@ -171,6 +186,20 @@ def stage(
         f'<div class="stage-title">{esc(title)}{tag}</div>'
         f"{sub_html}{extra_html}{detail_html}"
         f"</div>"
+    )
+
+
+def print_button() -> str:
+    """Floating top-right button on each flow diagram, calling the browser's
+    native print dialog (which offers "Save as PDF" on every modern browser
+    -- no extra dependency needed for a downloadable copy of the diagram).
+    Diagrams render inside an <iframe> via st.components.v1.html(), so
+    window.print() from here prints just the diagram's own document, not
+    the whole Streamlit page around it.
+    """
+    return (
+        '<button class="print-button" onclick="window.print()">'
+        "🖨️ Print / Save as PDF</button>"
     )
 
 

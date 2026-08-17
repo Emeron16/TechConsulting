@@ -57,6 +57,16 @@ TOOL_TO_MCP_SERVER = {
     "get_capa_status": "MCP: CAPA / Enterprise",
     "search_capa_records": "MCP: CAPA / Enterprise",
     "create_capa_draft": "MCP: CAPA / Enterprise",
+    "create_deviation_disposition": "MCP: Deviation Management",
+}
+
+# Tool name -> linked_record_type, for tools whose structured output is a
+# draft record (status="draft_pending_review") that review_actions.approve()
+# can promote into a real capas/deviations row on QP approval -- see
+# _extract_promotable_draft below and mcp_servers/review_actions.py.
+PROMOTABLE_TOOLS = {
+    "create_capa_draft": "capa",
+    "create_deviation_disposition": "deviation",
 }
 
 # Tool name -> what retrieval backend/strategy it actually uses. Search
@@ -108,6 +118,10 @@ TOOL_RETRIEVAL_INFO = {
     "create_capa_draft": {
         "backend": "PostgreSQL",
         "strategy": "Write operation (draft insert) -- not a retrieval call",
+    },
+    "create_deviation_disposition": {
+        "backend": "PostgreSQL",
+        "strategy": "Write operation (draft update -- disposes an existing deviation, not a retrieval call)",
     },
 }
 
@@ -189,6 +203,48 @@ def _extract_cache_hit(payloads: list[dict]) -> bool | None:
     for p in payloads:
         if "cache_hit" in p:
             return bool(p["cache_hit"])
+    return None
+
+
+def _extract_promotable_draft(steps: list["TraceStep"]) -> tuple[str, str, dict] | None:
+    """Scans trace_steps (already-built, in call order) for the LAST
+    tool_call step whose tool_name is create_capa_draft or
+    create_deviation_disposition and has a successfully-parsed
+    result_payloads entry. "Last" (not "first") matters because an agent
+    could in principle redraft after critic feedback on a retry attempt --
+    the final draft it settled on before producing its GroundedAnswer is
+    the one that should be promotable, not an earlier abandoned attempt.
+
+    Returns (linked_record_type, linked_record_id, structured_payload) or
+    None if no such call happened this run -- see mcp_servers/review_actions.py's
+    approve(), which promotes this payload into a real capas/deviations row
+    on QP approval.
+
+    linked_record_id means different things per tool, matching what each
+    promotion function in review_actions.py actually needs as its lookup
+    key: for a CapaDraft it's related_deviation_id (the deviation the new
+    CAPA will be FK'd to and whose count() drives the synthesized capa_id
+    -- NOT draft_capa_id, which is only the draft's own placeholder
+    identifier and was never a valid deviations.deviation_id to begin
+    with). For a DeviationDispositionDraft it's draft_deviation_id (the
+    existing deviation row _promote_deviation updates in place).
+    """
+    for step in reversed(steps):
+        if step.step_type != "tool_call" or step.tool_name not in PROMOTABLE_TOOLS:
+            continue
+        if not step.result_payloads:
+            continue
+        payload = step.result_payloads[0]
+        if payload.get("status") != "draft_pending_review":
+            continue
+        record_type = PROMOTABLE_TOOLS[step.tool_name]
+        if step.tool_name == "create_capa_draft":
+            record_id = payload.get("related_deviation_id")
+        else:
+            record_id = payload.get("draft_deviation_id")
+        if not record_id:
+            continue
+        return record_type, record_id, payload
     return None
 
 
@@ -498,8 +554,14 @@ async def run_question(question: str) -> AskResult:
             published = False
             review_queue_id = None
             if responding_agent_name in REVIEW_TRIGGERING_AGENTS:
+                draft = _extract_promotable_draft(all_trace_steps)
                 review_queue_id = await publish_needs_review(
-                    question, structured_answer.answer, responding_agent_name
+                    question,
+                    structured_answer.answer,
+                    responding_agent_name,
+                    linked_record_type=draft[0] if draft else None,
+                    linked_record_id=draft[1] if draft else None,
+                    structured_payload=draft[2] if draft else None,
                 )
                 published = True
 
@@ -529,7 +591,15 @@ async def run_question(question: str) -> AskResult:
     published = False
     review_queue_id = None
     if last_responding_agent_name and last_structured_answer is not None:
-        review_queue_id = await publish_needs_review(question, final_text, last_responding_agent_name)
+        draft = _extract_promotable_draft(all_trace_steps)
+        review_queue_id = await publish_needs_review(
+            question,
+            final_text,
+            last_responding_agent_name,
+            linked_record_type=draft[0] if draft else None,
+            linked_record_id=draft[1] if draft else None,
+            structured_payload=draft[2] if draft else None,
+        )
         published = True
 
     return AskResult(

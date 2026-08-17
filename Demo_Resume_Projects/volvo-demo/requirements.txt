@@ -1,0 +1,33 @@
+# Pinned to Python 3.12 (see .venv) rather than the 3.14 the other two
+# demos use -- torch/spacy/transformers wheel support is safer on 3.12.
+
+# --- model training / inference ---
+torch
+transformers
+accelerate  # required by transformers.Trainer for PyTorch device setup
+sentence-transformers
+spacy
+scikit-learn
+pandas
+matplotlib  # confusion-matrix grid artifact logged to MLflow
+
+# --- experiment tracking ---
+mlflow
+
+# --- preprocessing ---
+pyspark
+
+# --- serving layer ---
+fastapi
+uvicorn[standard]
+httpx
+
+# --- data access ---
+opensearch-py
+psycopg[binary]
+
+# --- app/config ---
+python-dotenv
+pyyaml
+streamlit
+pydantic

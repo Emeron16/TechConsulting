@@ -15,9 +15,17 @@ from dotenv import load_dotenv
 from copilot_agents.cache import CachedEmbeddingFunction, get_cached_retrieval, set_cached_retrieval
 from mcp_servers.hybrid_search import hybrid_search
 
-load_dotenv(Path(__file__).parent.parent / ".env")
+ROOT = Path(__file__).parent.parent
+load_dotenv(ROOT / ".env")
 
-CHROMA_DIR = os.environ.get("CHROMA_PERSIST_DIR", "./chroma_db")
+# CHROMA_PERSIST_DIR is conventionally a relative path (./chroma_db) --
+# resolve it against this project's root, not the process's cwd. Without
+# this, a caller that imports this module from a different working
+# directory (e.g. shell/novartis_wrapper.py, which loads this demo's .env
+# but launches from shell/'s own cwd) would silently open/create an empty
+# chroma_db/ under whatever cwd it happens to run from, instead of this
+# project's actual persisted collection.
+CHROMA_DIR = str(ROOT / os.environ.get("CHROMA_PERSIST_DIR", "./chroma_db"))
 COLLECTION_NAME = "quality_documents"
 EMBEDDING_MODEL = "text-embedding-3-small"
 

@@ -21,6 +21,7 @@ from copilot_agents.critic import llm_critic_guardrail
 from copilot_agents.mcp_connections import (
     batch_records_server,
     capa_server,
+    deviation_server,
     quality_docs_server,
     sop_repository_server,
 )
@@ -62,7 +63,7 @@ TOOL_BUDGET_INSTRUCTIONS = (
 
 
 def build_deviation_review_agent() -> tuple[Agent, list[MCPServerStdio]]:
-    servers = [quality_docs_server(), batch_records_server()]
+    servers = [quality_docs_server(), batch_records_server(), deviation_server()]
     agent = Agent(
         name="Deviation Review Agent",
         handoff_description="Reviews deviation reports against SOP escalation criteria and classification rules.",
@@ -86,6 +87,10 @@ def build_deviation_review_agent() -> tuple[Agent, list[MCPServerStdio]]:
             "search returns real content, use it; do not re-search just to look for more. "
             "Reason step by step through the SOP's classification logic against the "
             "deviation's actual facts before concluding. "
+            "If your analysis concludes the deviation should be classified and its "
+            "investigation closed, use create_deviation_disposition to draft that "
+            "disposition -- always note that any draft requires human review before "
+            "the deviation record is actually closed. "
             + CITATION_INSTRUCTIONS
             + " "
             + TOOL_BUDGET_INSTRUCTIONS

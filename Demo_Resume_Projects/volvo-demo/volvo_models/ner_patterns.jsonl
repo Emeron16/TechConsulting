@@ -1,0 +1,31 @@
+{"label": "VIN", "pattern": [{"TEXT": {"REGEX": "^[A-Za-z0-9]{17}$"}}]}
+{"label": "DTC", "pattern": [{"TEXT": {"REGEX": "^[PBCU]\\d{4}$"}}]}
+{"label": "COMPONENT", "pattern": "engine"}
+{"label": "COMPONENT", "pattern": "transmission"}
+{"label": "COMPONENT", "pattern": "turbocharger"}
+{"label": "COMPONENT", "pattern": "coolant"}
+{"label": "COMPONENT", "pattern": "clutch"}
+{"label": "COMPONENT", "pattern": "infotainment"}
+{"label": "COMPONENT", "pattern": "touchscreen"}
+{"label": "COMPONENT", "pattern": "navigation system"}
+{"label": "COMPONENT", "pattern": "backup camera"}
+{"label": "COMPONENT", "pattern": "battery"}
+{"label": "COMPONENT", "pattern": "alternator"}
+{"label": "COMPONENT", "pattern": "fuse box"}
+{"label": "COMPONENT", "pattern": "power window"}
+{"label": "COMPONENT", "pattern": "brake pedal"}
+{"label": "COMPONENT", "pattern": "brake fluid"}
+{"label": "COMPONENT", "pattern": "abs"}
+{"label": "SYMPTOM", "pattern": "stalling"}
+{"label": "SYMPTOM", "pattern": "misfire"}
+{"label": "SYMPTOM", "pattern": "overheating"}
+{"label": "SYMPTOM", "pattern": "rough idle"}
+{"label": "SYMPTOM", "pattern": "freezing"}
+{"label": "SYMPTOM", "pattern": "rebooting"}
+{"label": "SYMPTOM", "pattern": "disconnecting"}
+{"label": "SYMPTOM", "pattern": "battery drain"}
+{"label": "SYMPTOM", "pattern": "warning light"}
+{"label": "SYMPTOM", "pattern": "short circuit"}
+{"label": "SYMPTOM", "pattern": "grinding"}
+{"label": "SYMPTOM", "pattern": "squealing"}
+{"label": "SYMPTOM", "pattern": "soft pedal"}

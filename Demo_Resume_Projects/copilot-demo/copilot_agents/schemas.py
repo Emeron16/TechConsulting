@@ -81,6 +81,15 @@ class CapaDraft(BaseModel):
     note: str
 
 
+class DeviationDispositionDraft(BaseModel):
+    draft_deviation_id: str
+    proposed_classification: Literal["critical", "major", "minor"]
+    investigation_summary: str
+    proposed_status: Literal["closed"]
+    status: Literal["draft_pending_review"]
+    note: str
+
+
 class SopDocument(BaseModel):
     doc_id: str
     title: str

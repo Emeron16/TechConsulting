@@ -37,10 +37,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from copilot_agents.kb_ingest import chunk_text, file_hash, get_chroma_collection, load_document
+from copilot_agents.kb_ingest import CHROMA_DIR, chunk_text, file_hash, get_chroma_collection, load_document
 
 DOCS_DIR = Path(__file__).parent.parent / "data" / "synthetic_docs"
-CHROMA_DIR = os.environ.get("CHROMA_PERSIST_DIR", "./chroma_db")
 COLLECTION_NAME = "quality_documents"
 MANIFEST_PATH = Path(CHROMA_DIR) / ".ingest_manifest.json"
 

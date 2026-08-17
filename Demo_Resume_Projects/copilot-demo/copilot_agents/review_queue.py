@@ -31,7 +31,14 @@ def rabbitmq_url() -> str:
     return f"amqp://{user}:{password}@{host}:{port}/"
 
 
-async def publish_needs_review(question: str, draft_answer: str, agent_name: str) -> int:
+async def publish_needs_review(
+    question: str,
+    draft_answer: str,
+    agent_name: str,
+    linked_record_type: str | None = None,
+    linked_record_id: str | None = None,
+    structured_payload: dict | None = None,
+) -> int:
     """Publishes a durable "needs human review" message to RabbitMQ and
     inserts the corresponding review_queue row as 'pending'. Only called for
     agents whose output becomes a quality decision (Deviation, CAPA) --
@@ -39,6 +46,13 @@ async def publish_needs_review(question: str, draft_answer: str, agent_name: str
     the review queue on their own. Returns the new review_queue.id so the
     caller can track this specific run's review status (rather than matching
     on question text, which collides across repeated identical questions).
+
+    linked_record_type/linked_record_id/structured_payload carry the actual
+    draft object (CapaDraft/DeviationDispositionDraft) the agent produced
+    this run, if any -- see copilot_agents/ask_flow.py's
+    _extract_promotable_draft. This is what lets mcp_servers/review_actions.py's
+    approve() promote the draft into a real capas/deviations record instead
+    of only flipping review_queue.status.
     """
     connection = await aio_pika.connect_robust(rabbitmq_url())
     async with connection:
@@ -49,6 +63,9 @@ async def publish_needs_review(question: str, draft_answer: str, agent_name: str
             "question": question,
             "draft_answer": draft_answer,
             "agent_name": agent_name,
+            "linked_record_type": linked_record_type,
+            "linked_record_id": linked_record_id,
+            "structured_payload": structured_payload,
         }
         await channel.default_exchange.publish(
             aio_pika.Message(
@@ -61,11 +78,20 @@ async def publish_needs_review(question: str, draft_answer: str, agent_name: str
     with get_pg_connection() as conn, conn.cursor() as cur:
         cur.execute(
             """
-            INSERT INTO review_queue (question, draft_answer, citations, agent_name)
-            VALUES (%s, %s, %s, %s)
+            INSERT INTO review_queue (question, draft_answer, citations, agent_name,
+                                       linked_record_type, linked_record_id, structured_payload)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
             RETURNING id
             """,
-            (question, draft_answer, json.dumps([]), agent_name),
+            (
+                question,
+                draft_answer,
+                json.dumps([]),
+                agent_name,
+                linked_record_type,
+                linked_record_id,
+                json.dumps(structured_payload) if structured_payload is not None else None,
+            ),
         )
         review_id = cur.fetchone()[0]
         conn.commit()

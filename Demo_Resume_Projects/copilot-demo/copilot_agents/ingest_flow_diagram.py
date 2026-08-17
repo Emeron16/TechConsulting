@@ -7,7 +7,7 @@ IngestStep sequence copilot_agents.kb_ingest.ingest_document() yields.
 """
 import json
 
-from copilot_agents.diagram_common import CSS, REAL_TAG, arrow, esc, placeholder, stage
+from copilot_agents.diagram_common import CSS, REAL_TAG, arrow, esc, placeholder, print_button, stage
 from copilot_agents.kb_ingest import IngestStep
 
 _STAGE_CSS = {
@@ -47,7 +47,7 @@ def _steps_by_stage(steps: list[IngestStep]) -> dict[str, list[IngestStep]]:
 
 
 def render_ingest_flow_html(steps: list[IngestStep], filename: str, uploaded_by: str) -> str:
-    parts: list[str] = [CSS, '<div class="flow-wrap"><div class="flow-col">']
+    parts: list[str] = [CSS, '<div class="flow-wrap">', print_button(), '<div class="flow-col">']
 
     # -- Auth placeholder band, mirrors flow_diagram.py's framing for the
     # equivalent "who is allowed to upload" governance layer, not implemented
