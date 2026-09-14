@@ -1,0 +1,27 @@
+{
+  "policy_id": "PT-EVAL-001",
+  "title": "Outpatient Physical Therapy Evaluation and Treatment",
+  "source": "Plan Medical Policy (synthetic, modeled on MCG-style outpatient rehab guidelines)",
+  "cpt_codes": ["97110", "97161", "97162", "97163"],
+  "auto_approvable": true,
+  "low_cost": true,
+  "required_documentation": [
+    {
+      "item": "referring_diagnosis",
+      "keywords": ["diagnosis", "referred", "referral", "ordered by"],
+      "description": "A referring diagnosis and ordering provider for the physical therapy episode of care."
+    },
+    {
+      "item": "functional_limitation",
+      "keywords": ["function", "range of motion", "pain", "weakness", "unable to", "difficulty"],
+      "description": "Documentation of a functional limitation the therapy is intended to address."
+    }
+  ],
+  "criteria": [
+    "A qualified provider has referred the patient for physical therapy evaluation and/or treatment.",
+    "The clinical notes describe a functional limitation (pain, weakness, reduced range of motion, or difficulty with activities of daily living) related to the diagnosis.",
+    "No more than 3 initial evaluation visits and standard treatment frequency are being requested (higher frequency/duration requests route to standard review).",
+    "No red flags requiring urgent escalation (e.g., acute neurological deficit, suspected fracture) are present."
+  ],
+  "notes": "Synthetic policy created for this demo; not an actual InterQual/MCG criterion."
+}

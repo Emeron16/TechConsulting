@@ -1,0 +1,22 @@
+{
+  "policy_id": "HOME-O2-001",
+  "title": "Home Oxygen Therapy",
+  "source": "CMS National Coverage Determination style criteria (synthetic)",
+  "cpt_codes": ["E0431", "E1390", "E0439"],
+  "auto_approvable": false,
+  "low_cost": false,
+  "required_documentation": [
+    {
+      "item": "hypoxemia_testing",
+      "keywords": ["oxygen saturation", "spo2", "abg", "arterial blood gas", "pulse oximetry"],
+      "description": "Qualifying hypoxemia test result (resting, exercise, or nocturnal SpO2/ABG) within the last 30 days."
+    }
+  ],
+  "criteria": [
+    "Resting, exercise, or nocturnal oxygen saturation testing within the last 30 days shows SpO2 <= 88% (or PaO2 <= 55 mmHg on ABG), OR SpO2 <= 89% with evidence of cor pulmonale/erythrocytosis.",
+    "The underlying condition causing hypoxemia is documented (e.g., COPD, interstitial lung disease, heart failure).",
+    "A treating physician has ordered home oxygen therapy and specified the flow rate/duration (continuous, nocturnal, or exertional).",
+    "No contraindication (e.g., active home oxygen safety hazard) is documented."
+  ],
+  "notes": "Synthetic policy created for this demo; not an actual CMS NCD."
+}

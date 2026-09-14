@@ -1,0 +1,27 @@
+{
+  "policy_id": "MRI-LUMBAR-001",
+  "title": "MRI Lumbar Spine Without Contrast",
+  "source": "InterQual Imaging Criteria (synthetic)",
+  "cpt_codes": ["72148"],
+  "auto_approvable": false,
+  "low_cost": false,
+  "required_documentation": [
+    {
+      "item": "conservative_treatment",
+      "keywords": ["physical therapy", "conservative treatment", "nsaid", "conservative management", "6 weeks of treatment", "home exercise"],
+      "description": "Documentation of at least 6 weeks of conservative treatment attempted (physical therapy and/or NSAIDs/analgesics), unless red-flag symptoms are present."
+    },
+    {
+      "item": "symptom_duration_or_deficit",
+      "keywords": ["radiculopathy", "neurological deficit", "weeks of pain", "weeks of symptoms", "cauda equina", "numbness", "weakness"],
+      "description": "Either symptom duration of at least 6 weeks OR a documented neurological deficit / red-flag finding."
+    }
+  ],
+  "criteria": [
+    "Low back pain with radiculopathy or neurological symptoms present for at least 6 weeks.",
+    "OR red-flag symptoms present (cauda equina syndrome, progressive neurological deficit, suspected malignancy or infection, significant trauma) — conservative treatment is not required in this case.",
+    "Conservative treatment (physical therapy and/or NSAIDs/analgesics) attempted for at least 6 weeks, unless red flags above are present.",
+    "No absolute contraindication to MRI (e.g., non-MRI-compatible implant, severe claustrophobia without sedation plan) documented in the record."
+  ],
+  "notes": "Synthetic policy created for this demo; not an actual InterQual criterion."
+}
