@@ -1,0 +1,26 @@
+*** PDF UPLOAD — PRIOR AUTHORIZATION REQUEST ***
+Submitted via Provider Portal (PDF attachment, text extracted)
+
+Patient ID: MEM-65590212
+Patient Name: T. Boateng (synthetic demo patient)
+Date of Birth: 01/30/1990
+
+Requesting Provider: Dr. Elena Petrov, MD — Riverside Orthopedic Associates
+Ordering NPI: 1620394857
+
+Diagnosis Code(s): S83.241A (Medial meniscus tear, current injury), M25.561 (Pain in right knee)
+Procedure Code(s) Requested: 29881 (Knee arthroscopy with meniscectomy)
+
+Urgency: Routine
+
+Clinical Notes:
+32-year-old with right knee pain and intermittent mechanical locking for the past 8 weeks
+following a twisting injury while playing recreational soccer. MRI right knee (reviewed
+6/2/2026) showed a medial meniscus tear consistent with symptoms. Patient completed a 5-week
+course of physical therapy and NSAIDs with only partial improvement; mechanical locking
+persists and is now affecting activities of daily living. Physical exam notes joint line
+tenderness and positive McMurray test. No prior knee surgery. No absolute contraindications to
+surgery documented.
+
+Note: exact date physical therapy was completed is not specified in this submission (referenced
+generally as "5-week course" without start/end dates).

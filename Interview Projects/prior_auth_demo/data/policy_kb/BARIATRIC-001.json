@@ -1,0 +1,33 @@
+{
+  "policy_id": "BARIATRIC-001",
+  "title": "Laparoscopic Roux-en-Y Gastric Bypass",
+  "source": "CMS National Coverage Determination style criteria (synthetic) + Plan Medical Policy",
+  "cpt_codes": ["43644"],
+  "auto_approvable": false,
+  "low_cost": false,
+  "required_documentation": [
+    {
+      "item": "bmi_documentation",
+      "keywords": ["bmi", "body mass index"],
+      "description": "Documented BMI, either >= 40, or >= 35 with a qualifying comorbidity."
+    },
+    {
+      "item": "supervised_weight_program",
+      "keywords": ["physician-supervised", "weight management program", "weight loss program", "nutrition counseling", "dietitian"],
+      "description": "Participation in a physician-supervised weight management program, typically 3-6 months, within the last 2 years."
+    },
+    {
+      "item": "psych_evaluation",
+      "keywords": ["psychological evaluation", "psych eval", "behavioral health clearance", "mental health evaluation"],
+      "description": "A psychological/behavioral health evaluation clearing the patient for bariatric surgery."
+    }
+  ],
+  "criteria": [
+    "BMI >= 40, OR BMI >= 35 with at least one qualifying comorbidity (e.g., type 2 diabetes, hypertension, obstructive sleep apnea).",
+    "Completion of a physician-supervised weight management program (nutrition counseling, documented attempts at weight loss) within the past 2 years.",
+    "A psychological evaluation has cleared the patient for surgery, with no untreated eating disorder or unmanaged severe psychiatric illness noted.",
+    "Prior non-surgical weight-loss attempts have been insufficient to achieve or maintain a healthy weight given the patient's comorbidities.",
+    "No absolute contraindication to bariatric surgery (e.g., active substance use disorder, unmanaged bleeding disorder) documented."
+  ],
+  "notes": "Synthetic policy created for this demo; not an actual CMS NCD or plan policy."
+}

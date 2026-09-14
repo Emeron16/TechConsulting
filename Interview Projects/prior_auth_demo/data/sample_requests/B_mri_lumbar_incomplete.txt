@@ -1,0 +1,24 @@
+*** FAX TRANSMISSION — PRIOR AUTHORIZATION REQUEST ***
+Fax received: (unstructured scan, transcribed)
+
+Patient ID: MEM-77102934
+Patient Name: R. Nakamura (synthetic demo patient)
+Date of Birth: 09/23/1985
+
+Requesting Provider: Dr. Michael Ortiz, MD — Summit Family Medicine
+Ordering NPI: 1745829301
+
+Diagnosis Code(s): M54.5 (Low back pain)
+Procedure Code(s) Requested: 72148 (MRI lumbar spine without contrast)
+
+Urgency: Routine
+
+Clinical Notes:
+Patient presents with 7 weeks of radiculopathy symptoms: low back pain radiating into the left
+buttock and posterior thigh, worsening over the past 2 weeks. No bowel or bladder dysfunction.
+No fever, no unexplained weight loss, no history of cancer. No trauma. Patient is requesting
+imaging to evaluate for structural cause given persistent radiculopathy of 7 weeks' duration.
+Provider requests MRI lumbar spine without contrast to further evaluate.
+
+(No documentation of physical therapy, medication trial, or other conservative management
+provided in this submission.)

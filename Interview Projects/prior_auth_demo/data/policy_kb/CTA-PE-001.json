@@ -1,0 +1,23 @@
+{
+  "policy_id": "CTA-PE-001",
+  "title": "CT Angiography, Chest, for Suspected Pulmonary Embolism",
+  "source": "CMS Local Coverage Determination style criteria (synthetic)",
+  "cpt_codes": ["71275"],
+  "auto_approvable": false,
+  "low_cost": false,
+  "urgent_indicated": true,
+  "required_documentation": [
+    {
+      "item": "clinical_suspicion",
+      "keywords": ["dyspnea", "chest pain", "tachycardia", "hypoxia", "d-dimer", "wells score", "pe protocol"],
+      "description": "Signs/symptoms or risk score supporting clinical suspicion of pulmonary embolism."
+    }
+  ],
+  "criteria": [
+    "Signs or symptoms consistent with acute PE (dyspnea, pleuritic chest pain, tachycardia, hypoxia) are documented.",
+    "An elevated D-dimer, high pretest probability (e.g., Wells score), or equivalent clinical decision rule supports imaging.",
+    "This is a time-sensitive / STAT request given the risk of missed or delayed PE diagnosis; it should be escalated for urgent review regardless of documentation completeness on other criteria.",
+    "No contraindication to IV contrast (e.g., unaddressed severe contrast allergy, acute kidney injury without a mitigation plan) is documented."
+  ],
+  "notes": "Synthetic policy created for this demo; not an actual CMS LCD."
+}

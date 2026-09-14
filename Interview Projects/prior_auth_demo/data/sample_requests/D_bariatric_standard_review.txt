@@ -1,0 +1,29 @@
+*** PROVIDER UPLOAD — PRIOR AUTHORIZATION REQUEST ***
+Submitted via Provider Portal (clinical packet)
+
+Patient ID: MEM-90213877
+Patient Name: L. Fitzgerald (synthetic demo patient)
+Date of Birth: 11/02/1974
+
+Requesting Provider: Dr. Priya Nair, MD — Metro Bariatric & Surgical Center
+Ordering NPI: 1509283746
+
+Diagnosis Code(s): E66.01 (Morbid obesity due to excess calories), E11.9 (Type 2 diabetes
+mellitus without complications), G47.33 (Obstructive sleep apnea)
+Procedure Code(s) Requested: 43644 (Laparoscopic Roux-en-Y gastric bypass)
+
+Urgency: Routine
+
+Clinical Notes:
+51-year-old with BMI 38.2, type 2 diabetes (HbA1c 8.1%, managed with metformin and glargine),
+and obstructive sleep apnea on CPAP. Patient participated in a physician-supervised weight
+management program for 4 months in 2025 (nutrition counseling notes on file) with modest
+weight loss (~6 lbs) followed by regain. Patient reports multiple prior diet attempts over 10
+years without sustained success. Surgeon recommends laparoscopic Roux-en-Y gastric bypass given
+BMI plus comorbid diabetes and OSA.
+
+A psychological evaluation was scheduled but the results are not yet included in this packet;
+office notes indicate the evaluation is "in progress, pending scheduling." Patient has a
+history of mild depression, stable on sertraline for 3 years per PCP records, no active
+eating disorder documented. Family history of complications from bariatric surgery in a
+sibling is noted by the patient as a concern to discuss.
