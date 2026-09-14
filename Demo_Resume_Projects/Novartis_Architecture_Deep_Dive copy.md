@@ -1,7 +1,7 @@
 # Novartis Multi-Agent CMC Manufacturing Quality Copilot — Architecture Deep Dive
 
 **Prepared for:** Emeron Marcelle, Lead AI Scientist — interview / architecture-review prep
-**Project:** Multi-Agent CMC Manufacturing Quality Copilot, Novartis (Sep 2024 – Present)
+**Project:** Multi-Agent CMC Manufacturing Quality Copilot, Novartis (Mar 2025 – Present)
 **Note on assumptions:** Your resume describes *what* was built and the Azure/Agents-SDK stack behind it, but not every low-level design decision, exact staffing assignment, or delivery date. Everywhere this document goes below that level of detail, it is a reasonable, defensible assumption for a system of this type and scale — each one is labeled and explained so you can confirm, correct, or replace it with what actually happened before repeating it in an interview.
 
 ---
@@ -32,6 +32,7 @@ flowchart TB
         BATCHAGENT["Batch Record Analysis Agent"]
         SOPAGENT["SOP Interpretation Agent"]
         CAPAAGENT["CAPA Decision Support Agent"]
+        CRITIC["Critic / Grounding Validator<br/>(output guardrail on every specialist)"]
     end
 
     subgraph MCP["MCP GOVERNANCE LAYER — Servers & Clients"]
@@ -113,9 +114,15 @@ flowchart TB
     BATCHAGENT --> AOAI
     SOPAGENT --> AOAI
     CAPAAGENT --> AOAI
+    CRITIC --> AOAI
 
-    DEVAGENT --> SERVICEBUS
-    CAPAAGENT --> SERVICEBUS
+    DEVAGENT --> CRITIC
+    BATCHAGENT --> CRITIC
+    SOPAGENT --> CRITIC
+    CAPAAGENT --> CRITIC
+
+    CRITIC --> SERVICEBUS
+    CRITIC -.fails grounding check,<br/>retry with feedback.-> SUPERVISOR
     SERVICEBUS --> REVIEWQUEUE
     REVIEWQUEUE --> QP
     REVIEWQUEUE --> ESIGN
@@ -158,6 +165,7 @@ sequenceDiagram
     participant MCP as MCP Server (Quality Docs + Batch)
     participant Srch as Azure AI Search
     participant AOAI as Azure OpenAI
+    participant Critic as Critic / Grounding Validator
     participant SB as Service Bus
     participant QP as Qualified Person
     participant Audit as Audit Log Store
@@ -165,13 +173,21 @@ sequenceDiagram
     Rev->>UI: "Does deviation DEV-2201 meet SOP-114 escalation criteria?"
     UI->>GW: Authenticated request (Entra ID token)
     GW->>Sup: Route request
-    Sup->>Dev: Delegate to Deviation Review Agent
+    Sup->>Dev: Handoff (single target — only Dev processes this request)
     Dev->>MCP: Request SOP-114 + batch record context
     MCP->>Srch: Hybrid retrieval query (metadata-filtered: approved, latest version)
     Srch-->>MCP: Ranked, cited passages
     MCP-->>Dev: Governed context returned
     Dev->>AOAI: Generate grounded answer with citations
     AOAI-->>Dev: Draft answer + source references
+    Dev->>Critic: Validate draft against retrieved sources (deterministic citation check + LLM claim check)
+    alt Grounding check fails
+        Critic-->>Dev: Fail + specific feedback
+        Dev->>AOAI: Regenerate with critic feedback (bounded retry)
+        AOAI-->>Dev: Revised draft answer
+        Dev->>Critic: Re-validate revised draft
+    end
+    Critic-->>Dev: Pass
     Dev->>SB: Publish "needs human review" event
     SB->>QP: Route to review queue
     QP->>QP: Reviews grounded answer + citations
@@ -235,9 +251,10 @@ Each entry follows the same structure: **What it does** · **Who's in charge** �
 ### 2.4 Agent Orchestration Layer (OpenAI Agents SDK)
 
 **Supervisor / Router Agent**
-- *What it does:* Receives the incoming question, decides which specialist agent (or agents) should handle it, and assembles the final response if multiple agents contributed.
+- *What it does:* Receives the incoming question and performs a **handoff** — the OpenAI Agents SDK's native mechanism for transferring an entire conversation, with full context, to exactly one specialist agent. This is a **single-target, single-agent-per-request** design: the Supervisor evaluates the question once, hands off to exactly one of the four specialist agents, and that specialist alone produces the final answer. There is no point in this architecture where two specialist agents are concurrently processing the same request, and no "assemble multiple agents' answers into one response" step exists anywhere in the flow — if a question spans two domains (e.g. a deviation question that also needs SOP interpretation), the Supervisor routes it to whichever single specialist is most central to the question, and that specialist reaches the second domain's context itself via its own (wider) MCP tool scope, not via a second agent being invoked. Note: it is the Supervisor Agent, running on the OpenAI Agents SDK's orchestration layer, that makes and executes this handoff decision — Azure OpenAI is the underlying LLM the Supervisor (and every specialist) calls to reason, not the component performing the handoff itself.
 - *Who's in charge:* You (Lead AI Scientist) — this is the core orchestration design decision of the whole project.
 - *Why a router pattern over alternatives (a single do-everything agent, or a fixed if/else rules engine):* A single monolithic agent with access to every tool would be harder to scope, audit, and validate — Security/Compliance would have to review one agent with unlimited reach instead of four agents each with a narrow, provable scope. A hardcoded rules engine (no agent at all) was rejected because the routing decision itself benefits from language understanding (a question can span deviation + SOP context in ambiguous ways that a rules engine handles poorly).
+- *Why single-target handoff over a multi-agent fan-out pattern:* The SDK's `handoff` primitive is architecturally single-target by design — it transfers the full conversation to one agent, not several. This was not a limitation to work around; it's the right fit here, since it means at most one specialist agent's tool-call trace, citations, and critic evaluation ever needs to be reasoned about per request — exactly the "narrow, provable scope" property Security/Compliance needs to audit a given answer's provenance. A true parallel multi-agent pattern (two specialists processing the same request concurrently, with a separate synthesis step merging their outputs) was not built for this system; it would require custom orchestration on top of the SDK, not something `handoff` provides natively.
 - *Phase:* Phase 4 (Agent & MCP Development), weeks 15–28.
 
 **Deviation Review Agent, Batch Record Analysis Agent, SOP Interpretation Agent, CAPA Decision Support Agent**
@@ -245,6 +262,15 @@ Each entry follows the same structure: **What it does** · **Who's in charge** �
 - *Who's in charge:* ML/AI Engineers built each agent's tool bindings and prompts under your architectural direction; Quality/Compliance SMEs validated that each agent's outputs matched real investigative reasoning.
 - *Why four specialist agents over one generalist agent:* Matches the MCP scoping principle above — each agent only needs (and is only granted) access to the tools relevant to its job, which is both a security boundary and a way to keep each agent's behavior easier to test, validate, and explain to an auditor.
 - *Phase:* Phase 4, weeks 15–28, iterated through Phase 6 validation.
+
+### 2.4a Critic / Grounding Validation Layer
+
+**Critic / Grounding Validator**
+- *What it does:* A mandatory checkpoint every specialist agent's draft answer passes through before it is eligible for the human review queue or returned to the UI. Two stages, run in order: (1) a deterministic, no-LLM check that every citation in the draft corresponds to a document/record ID the agent actually surfaced via a tool call this run — catches fabricated or stale citations essentially for free; (2) if that passes, a second LLM call reads the draft's claims against the actual retrieved source text and judges whether those claims are genuinely supported, not just plausible-sounding. A failed check returns specific feedback to the originating specialist agent, which regenerates its answer against that feedback, up to a bounded retry limit — it does not silently drop the question or let an ungrounded answer through by default.
+- *Who's in charge:* You defined the two-stage check and what "grounded" means for this system; ML/AI Engineers implemented it as an output guardrail on each specialist agent; Quality/Compliance SMEs reviewed the critic's judgment criteria against real investigative reasoning, the same way they validated the specialist agents themselves.
+- *Why a central critic over alternatives (no automated check — rely solely on QP review; a single-LLM-only critic with no deterministic layer; a separate critic agent per specialist domain):* Relying on QP review alone means the first check on a fabricated citation is a trained human's time — expensive, slow, and exactly the failure mode citations-and-audit-trail were designed to catch earlier. A deterministic-only check is fast and free but can't tell whether a technically-correct citation is being mischaracterized (e.g., citing the right SOP section but misstating what it requires) — that needs actual reading comprehension against source text, which only an LLM pass can do. Splitting the critic into four separate domain-specific critic agents was considered and set aside for now: each specialist's own run is already independently scoped and independently attributable (its own retrieved sources, its own tool-call trace, checked only against its own evidence) regardless of whether one shared critic model or four separate ones does the judging, so splitting the critic adds LLM cost and complexity without a clear traceability gain. The one legitimate limitation of a shared critic is that its judgment criteria are currently domain-agnostic ("is this claim supported by the cited text") rather than specialized per workflow (e.g., a CAPA critic checking root-cause-to-action plausibility specifically, a SOP critic checking verbatim quotation precision specifically) — worth revisiting if false negatives/positives cluster in a particular specialist's domain during validation.
+- *What it does NOT replace:* The critic catches *grounding* failures — is this claim actually supported by what was retrieved this run. It cannot and does not judge *regulatory correctness* — whether a deviation's classification tier or a CAPA's proposed action reflects sound GxP judgment. That remains the QP's role; the critic exists so the QP's review time is spent on regulatory judgment calls, not catching hallucinated citations a mechanical check could have caught first.
+- *Phase:* Phase 4 (Agent & MCP Development), alongside the specialist agents themselves, weeks 15–28 — implemented as an SDK-native output guardrail attached directly to each agent rather than a separate service, so it ships and iterates on the same timeline as the agents it checks.
 
 ### 2.5 MCP Governance Layer
 
@@ -397,9 +423,9 @@ A few concepts that don't map to a typical enterprise software project but shape
 | 6 — Computer System Validation (CSV) & GxP Qualification | URS/FS traceability, IQ/OQ/PQ, e-signature/Part 11, audit trail, AI Foundry governance | QA/Validation Testers, Quality/Compliance SMEs | Weeks 28–40 |
 | 7 — Pilot / UAT with Quality Reviewers | Real reviewers test real cases in a controlled environment | Product Owner, Quality Reviewers (pilot group) | Weeks 38–44 |
 | 8 — Production Go-Live & Hypercare | Rollout, elevated monitoring, fast-response support | Full team | Week 44–48 |
-| 9 — Continuous Monitoring & Enhancement | New workflows, model updates, ongoing governance reviews | You, full team | Month 11 – Present (ongoing) |
+| 9 — Continuous Monitoring & Enhancement | New workflows, model updates, ongoing governance reviews | You, full team | Month 11 – Present (ongoing, ~7 months and counting) |
 
-Total time to initial production go-live: **roughly 10–11 months**, with continuous enhancement since — consistent with a role that started September 2024 and, per your resume, is still active.
+Total time to initial production go-live: **roughly 10–11 months**, with continuous enhancement since — consistent with a role that started March 2025 and, per your resume, is still active as of today.
 
 ---
 
