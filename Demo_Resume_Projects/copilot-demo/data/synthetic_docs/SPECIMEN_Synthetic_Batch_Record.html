@@ -1,0 +1,608 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="doc-id" content="BMR-77214-Rev.C">
+<meta name="doc-type" content="batch_record">
+<meta name="doc-title" content="Batch Manufacturing Record BMR-77214-Rev.C (Specimen Excerpt)">
+<meta name="doc-status" content="draft">
+<meta name="doc-effective-date" content="2024-08-14">
+<meta name="doc-version" content="1">
+<title>SYNTHETIC EXAMPLE — Fictional Batch Record (Training Reference Only)</title>
+<style>
+  @media print {
+    .banner { position: fixed; }
+    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+  :root{
+    --paper:#fdfcf9;
+    --ink:#1a1a1a;
+    --ink-dim:#55524a;
+    --line:#c9c3b3;
+    --line-heavy:#8a8474;
+    --stamp:#a33a2f;
+    --field-bg:#f4f1e9;
+    --header-bg:#efe9d8;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background:#e7e3d8;
+    color:var(--ink);
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size:14px;
+    line-height:1.45;
+  }
+  .banner{
+    top:0; left:0; right:0;
+    background:var(--stamp);
+    color:#fff;
+    text-align:center;
+    padding:10px 16px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight:700;
+    font-size:13px;
+    letter-spacing:0.04em;
+    z-index:10;
+  }
+  .banner span{font-weight:400; letter-spacing:0.02em}
+  .sheet{
+    max-width:900px;
+    margin:56px auto 80px;
+    background:var(--paper);
+    border:1px solid var(--line-heavy);
+    box-shadow:0 2px 14px rgba(0,0,0,0.18);
+    position:relative;
+    overflow:hidden;
+  }
+  .watermark{
+    position:absolute;
+    top:44%; left:50%;
+    transform:translate(-50%,-50%) rotate(-28deg);
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:92px;
+    font-weight:800;
+    color:rgba(163,58,47,0.08);
+    white-space:nowrap;
+    pointer-events:none;
+    z-index:1;
+    user-select:none;
+  }
+  .content{position:relative; z-index:2}
+
+  .doc-header{
+    background:var(--header-bg);
+    border-bottom:2px solid var(--line-heavy);
+    padding:18px 32px;
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:8px 24px;
+  }
+  .doc-header .company{
+    font-family:Arial, Helvetica, sans-serif;
+    font-weight:800;
+    font-size:18px;
+    letter-spacing:0.02em;
+  }
+  .doc-header .company small{
+    display:block;
+    font-weight:400;
+    font-size:11px;
+    color:var(--ink-dim);
+    letter-spacing:0.06em;
+    margin-top:2px;
+  }
+  .doc-header .doc-id{
+    text-align:right;
+    font-family: 'Courier New', monospace;
+    font-size:12px;
+    color:var(--ink-dim);
+  }
+  .doc-header .title{
+    grid-column:1 / -1;
+    font-family:Arial, Helvetica, sans-serif;
+    font-weight:700;
+    font-size:15px;
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    margin-top:6px;
+    border-top:1px solid var(--line);
+    padding-top:10px;
+  }
+
+  .field-grid{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:1px;
+    background:var(--line);
+    border-bottom:2px solid var(--line-heavy);
+  }
+  .field-grid.wide{grid-template-columns:repeat(2, 1fr)}
+  .field{
+    background:var(--field-bg);
+    padding:8px 12px;
+  }
+  .field label{
+    display:block;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:9.5px;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    color:var(--ink-dim);
+    margin-bottom:3px;
+  }
+  .field .val{
+    font-family:'Courier New', monospace;
+    font-size:13px;
+    font-weight:700;
+  }
+
+  section.block{padding:20px 32px; border-bottom:1px solid var(--line)}
+  section.block:last-of-type{border-bottom:none}
+  .block h2{
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:12.5px;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    color:var(--ink);
+    margin:0 0 12px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .block h2 .num{
+    background:var(--ink);
+    color:var(--paper);
+    font-size:11px;
+    width:20px;height:20px;
+    display:inline-flex;align-items:center;justify-content:center;
+    border-radius:2px;
+  }
+
+  table{width:100%; border-collapse:collapse; font-size:12.5px}
+  th,td{border:1px solid var(--line); padding:6px 8px; text-align:left; vertical-align:top}
+  th{
+    background:var(--header-bg);
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    color:var(--ink-dim);
+  }
+  td.num-cell{font-family:'Courier New', monospace; white-space:nowrap}
+  .sign-cell{
+    font-family:'Brush Script MT', cursive;
+    color:#2a4a7a;
+    font-size:15px;
+  }
+  .sign-block{line-height:1.3}
+  .sign-block .sig{
+    font-family:'Brush Script MT', cursive;
+    color:#2a4a7a;
+    font-size:15px;
+  }
+  .sign-block .printed{
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:10px;
+    color:var(--ink-dim);
+  }
+  .sign-block .stamp-time{
+    font-family:'Courier New', monospace;
+    font-size:10px;
+    color:var(--ink-dim);
+  }
+  .sign-blank{color:var(--ink-dim); font-family:Arial, sans-serif; font-size:11px; font-style:italic}
+
+  .check-grid{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+    margin-bottom:16px;
+  }
+  .check-grid .field{padding:8px 12px}
+  .check-item{
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .check-item .box{
+    width:16px;height:16px;
+    border:1.5px solid var(--ink);
+    display:inline-flex;align-items:center;justify-content:center;
+    font-size:12px;font-weight:800;
+    flex:none;
+  }
+  .check-item .box.on{background:var(--ink); color:var(--paper)}
+
+  .step-row td{padding:10px 8px}
+  .step-num{
+    font-family:Arial, Helvetica, sans-serif;
+    font-weight:700;
+    background:var(--field-bg);
+    text-align:center;
+  }
+  .check-ok{color:#2f6e3f; font-weight:700}
+  .check-flag{color:var(--stamp); font-weight:700}
+
+  .signoff-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
+    margin-top:8px;
+  }
+  .signoff{
+    border:1px solid var(--line);
+    padding:12px;
+    background:var(--field-bg);
+  }
+  .signoff label{
+    display:block;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:9.5px;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    color:var(--ink-dim);
+    margin-bottom:6px;
+  }
+  .signoff .line{
+    border-bottom:1px solid var(--ink-dim);
+    min-height:26px;
+    display:flex;
+    align-items:flex-end;
+    padding-bottom:2px;
+  }
+  .signoff .meta{
+    font-family:'Courier New', monospace;
+    font-size:10.5px;
+    color:var(--ink-dim);
+    margin-top:5px;
+  }
+
+  .deviation-box{
+    border:2px dashed var(--stamp);
+    padding:14px 16px;
+    background:#fbf3f1;
+  }
+  .deviation-box .tag{
+    display:inline-block;
+    background:var(--stamp);
+    color:#fff;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:0.05em;
+    padding:2px 8px;
+    border-radius:2px;
+    margin-bottom:8px;
+  }
+
+  .final-block{
+    background:var(--header-bg);
+    border-top:3px double var(--line-heavy);
+    padding:20px 32px;
+  }
+  .stamp-area{
+    display:flex;
+    justify-content:flex-end;
+    margin-top:10px;
+  }
+  .stamp{
+    border:3px solid var(--stamp);
+    color:var(--stamp);
+    font-family:Arial, Helvetica, sans-serif;
+    font-weight:800;
+    font-size:15px;
+    letter-spacing:0.08em;
+    padding:8px 18px;
+    transform:rotate(-4deg);
+    border-radius:4px;
+    opacity:0.85;
+  }
+
+  .footer-note{
+    max-width:900px;
+    margin:0 auto 60px;
+    padding:0 16px;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:11.5px;
+    color:#6b6b6b;
+    text-align:center;
+  }
+</style>
+</head>
+<body>
+
+<div class="banner">
+  SYNTHETIC EXAMPLE — NOT A REAL MANUFACTURING RECORD <span>· fictional company, product, and personnel · for structural/educational reference only</span>
+</div>
+
+<div class="sheet">
+  <div class="watermark">SPECIMEN</div>
+  <div class="content">
+
+    <div class="doc-header">
+      <div class="company">
+        AURELIA PHARMA SCIENCES <small>(fictional company — not affiliated with any real manufacturer)</small>
+      </div>
+      <div class="doc-id">
+        BMR-77214-Rev.C<br>Pages 14–16 of 62 (excerpt)
+      </div>
+      <div class="title">Batch Manufacturing Record — Granulation &amp; Compression Stage</div>
+    </div>
+
+    <div class="field-grid">
+      <div class="field"><label>Product Name</label><div class="val">Metforalex XR 500 mg Tablets</div></div>
+      <div class="field"><label>Product Code</label><div class="val">MFX-500-XR</div></div>
+      <div class="field"><label>Batch / Lot No.</label><div class="val">L-24Q3-0417</div></div>
+      <div class="field"><label>Batch Size</label><div class="val">185.0 kg (410,000 tabs)</div></div>
+
+      <div class="field"><label>Manufacturing Order No.</label><div class="val">MO-2024-08812</div></div>
+      <div class="field"><label>Master Formula Ref.</label><div class="val">MF-MFX500-04, Effective 02-Jun-2024</div></div>
+      <div class="field"><label>Manufacturing Site</label><div class="val">Building 4, Suite 4B</div></div>
+      <div class="field"><label>Batch Start Date</label><div class="val">14-Aug-2024</div></div>
+    </div>
+
+    <section class="block">
+      <h2><span class="num">1</span>Line Clearance &amp; Equipment Verification</h2>
+      <div class="check-grid">
+        <div class="field"><label>Suite / Line</label><div class="val">Suite 4B — Granulation Line 2</div></div>
+        <div class="field"><label>Room Temp / RH</label><div class="val">21.4 °C / 38% RH</div></div>
+        <div class="field"><label>Cleared Of</label><div class="val">Lot L-24Q2-0391 (Product: Doncera 10mg)</div></div>
+        <div class="field"><label>Clearance Time</label><div class="val">07:40, 14-Aug-2024</div></div>
+      </div>
+      <table>
+        <thead>
+          <tr><th>Equipment</th><th>Equipment ID</th><th>Cleaning Status</th><th>Verified By</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>High-Shear Granulator</td><td class="num-cell">GRN-02</td>
+            <td><span class="check-item"><span class="box on">✓</span>Cleaned, status label current</span></td>
+            <td class="sign-cell">P. Ansah</td>
+          </tr>
+          <tr>
+            <td>Fluid-Bed Dryer</td><td class="num-cell">FBD-01</td>
+            <td><span class="check-item"><span class="box on">✓</span>Cleaned, status label current</span></td>
+            <td class="sign-cell">P. Ansah</td>
+          </tr>
+          <tr>
+            <td>Comil / Mill</td><td class="num-cell">MIL-05</td>
+            <td><span class="check-item"><span class="box on">✓</span>Cleaned, status label current</span></td>
+            <td class="sign-cell">P. Ansah</td>
+          </tr>
+          <tr>
+            <td>Blender (Bin, 300L)</td><td class="num-cell">BLN-03</td>
+            <td><span class="check-item"><span class="box on">✓</span>Cleaned, status label current</span></td>
+            <td class="sign-cell">P. Ansah</td>
+          </tr>
+          <tr>
+            <td>Tablet Press</td><td class="num-cell">TP-07</td>
+            <td><span class="check-item"><span class="box on">✓</span>Cleaned, status label current</span></td>
+            <td class="sign-cell">P. Ansah</td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="font-size:11.5px; color:var(--ink-dim); margin:10px 0 0;">
+        Confirmed: all product-contact equipment for this stage executed per Master Formula <strong>MF-MFX500-04 (effective 02-Jun-2024)</strong>, current approved version at time of manufacture.
+      </p>
+    </section>
+
+    <section class="block">
+      <h2><span class="num">2</span>Component / Material Dispensing</h2>
+      <table>
+        <thead>
+          <tr><th>Material</th><th>Material Code</th><th>Supplier Lot</th><th>Required Qty</th><th>Dispensed Qty</th><th>Verified By</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Metforalex API</td><td class="num-cell">RM-1002</td><td class="num-cell">SUP-88213</td>
+            <td class="num-cell">92.50 kg</td><td class="num-cell">92.53 kg</td><td class="sign-cell">J. Alderete</td>
+          </tr>
+          <tr>
+            <td>Microcrystalline Cellulose PH-102</td><td class="num-cell">RM-2210</td><td class="num-cell">SUP-77390</td>
+            <td class="num-cell">54.20 kg</td><td class="num-cell">54.18 kg</td><td class="sign-cell">J. Alderete</td>
+          </tr>
+          <tr>
+            <td>Hypromellose K100M</td><td class="num-cell">RM-3305</td><td class="num-cell">SUP-90015</td>
+            <td class="num-cell">27.75 kg</td><td class="num-cell">27.76 kg</td><td class="sign-cell">M. Oyelaran</td>
+          </tr>
+          <tr>
+            <td>Magnesium Stearate</td><td class="num-cell">RM-4410</td><td class="num-cell">SUP-65120</td>
+            <td class="num-cell">1.85 kg</td><td class="num-cell">1.85 kg</td><td class="sign-cell">M. Oyelaran</td>
+          </tr>
+          <tr>
+            <td>Colloidal Silicon Dioxide</td><td class="num-cell">RM-5108</td><td class="num-cell">SUP-51287</td>
+            <td class="num-cell">8.70 kg</td><td class="num-cell">8.69 kg</td><td class="sign-cell">J. Alderete</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="block">
+      <h2><span class="num">3</span>Process Steps &amp; In-Process Checks</h2>
+      <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr><th style="width:28px">#</th><th>Operation</th><th>Equipment ID</th><th>Target / Spec</th><th>Observed</th><th>Room °C / RH%</th><th>Time</th><th>Operator</th><th>Verified By</th></tr>
+        </thead>
+        <tbody>
+          <tr class="step-row">
+            <td class="step-num">1</td>
+            <td>Charge API and MCC into high-shear granulator; dry mix</td>
+            <td class="num-cell">GRN-02</td>
+            <td>5 ± 1 min at 250 rpm</td>
+            <td>5 min @ 248 rpm <span class="check-ok">✓</span></td>
+            <td class="num-cell">21.5 / 39%</td>
+            <td>08:14</td>
+            <td class="sign-cell">R. Devane</td>
+            <td class="sign-cell">P. Ansah</td>
+          </tr>
+          <tr class="step-row">
+            <td class="step-num">2</td>
+            <td>Add binder solution; wet granulate</td>
+            <td class="num-cell">GRN-02</td>
+            <td>Endpoint by power consumption curve</td>
+            <td>Endpoint reached, 6.2 min <span class="check-ok">✓</span></td>
+            <td class="num-cell">21.6 / 39%</td>
+            <td>08:26</td>
+            <td class="sign-cell">R. Devane</td>
+            <td class="sign-cell">P. Ansah</td>
+          </tr>
+          <tr class="step-row">
+            <td class="step-num">3</td>
+            <td>Fluid-bed dry granulate</td>
+            <td class="num-cell">FBD-01</td>
+            <td>LOD ≤ 2.0% w/w</td>
+            <td>LOD = 1.7% <span class="check-ok">✓</span></td>
+            <td class="num-cell">21.8 / 37%</td>
+            <td>09:05</td>
+            <td class="sign-cell">R. Devane</td>
+            <td class="sign-cell">P. Ansah</td>
+          </tr>
+          <tr class="step-row">
+            <td class="step-num">4</td>
+            <td>Mill dried granules, 20-mesh screen</td>
+            <td class="num-cell">MIL-05</td>
+            <td>Yield ≥ 95%</td>
+            <td>97.2% yield <span class="check-ok">✓</span></td>
+            <td class="num-cell">21.7 / 38%</td>
+            <td>09:40</td>
+            <td class="sign-cell">T. Naicker</td>
+            <td class="sign-cell">P. Ansah</td>
+          </tr>
+          <tr class="step-row">
+            <td class="step-num">5</td>
+            <td>Blend with extragranular excipients</td>
+            <td class="num-cell">BLN-03</td>
+            <td>Blend uniformity RSD ≤ 3.0%</td>
+            <td>RSD = 4.6% <span class="check-flag">⚠</span></td>
+            <td class="num-cell">21.9 / 38%</td>
+            <td>10:15</td>
+            <td class="sign-cell">T. Naicker</td>
+            <td class="sign-cell">P. Ansah</td>
+          </tr>
+          <tr class="step-row">
+            <td class="step-num">6</td>
+            <td>Compress tablets</td>
+            <td class="num-cell">TP-07</td>
+            <td>Hardness 8–12 kP; weight 580 mg ± 3%</td>
+            <td>Hardness 9.4 kP; wt 578 mg <span class="check-ok">✓</span></td>
+            <td class="num-cell">22.0 / 40%</td>
+            <td>11:30</td>
+            <td class="sign-cell">T. Naicker</td>
+            <td class="sign-cell">P. Ansah</td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2><span class="num">4</span>Yield Reconciliation</h2>
+      <table>
+        <thead>
+          <tr><th>Stage</th><th>Theoretical Yield</th><th>Actual Yield</th><th>% Yield</th><th>Limit</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Granulation (dried, milled)</td>
+            <td class="num-cell">184.2 kg</td>
+            <td class="num-cell">179.1 kg</td>
+            <td class="num-cell">97.2%</td>
+            <td class="num-cell">95.0–102.0%</td>
+            <td><span class="check-ok">✓ Within limit</span></td>
+          </tr>
+          <tr>
+            <td>Final Blend</td>
+            <td class="num-cell">185.0 kg</td>
+            <td class="num-cell">182.4 kg</td>
+            <td class="num-cell">98.6%</td>
+            <td class="num-cell">96.0–102.0%</td>
+            <td><span class="check-ok">✓ Within limit</span></td>
+          </tr>
+          <tr>
+            <td>Compressed Tablets</td>
+            <td class="num-cell">410,000 tabs</td>
+            <td class="num-cell">403,850 tabs</td>
+            <td class="num-cell">98.5%</td>
+            <td class="num-cell">96.0–101.0%</td>
+            <td><span class="check-ok">✓ Within limit</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="font-size:11.5px; color:var(--ink-dim); margin:10px 0 0;">
+        No yield variance investigation triggered — all stages within Master Formula reconciliation range.
+      </p>
+    </section>
+
+    <section class="block">
+      <h2><span class="num">5</span>Deviation Log</h2>
+      <div class="deviation-box">
+        <span class="tag">DEV-2024-0417-A · MINOR</span>
+        <p style="margin:0 0 6px"><strong>Step 5 — Blend uniformity RSD exceeded target (4.6% vs. ≤3.0% spec)</strong>, within action limit of 5.0%. Investigation attributed variance to extended blend-to-compression hold time (38 min vs. 30 min SOP guidance).</p>
+        <p style="margin:0; color:var(--ink-dim); font-size:12px;">
+          Disposition: Batch released to compression per QA review — RSD within qualified action limit, content uniformity of compressed tablets (Step 6 IPC, not shown) confirmed acceptable. CAPA-2024-0417 opened to reinforce hold-time adherence.
+        </p>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2><span class="num">6</span>Sign-Offs</h2>
+      <div class="signoff-grid">
+        <div class="signoff">
+          <label>Production Supervisor</label>
+          <div class="line sign-block">
+            <div class="sig">D. Kowalczyk</div>
+          </div>
+          <div class="meta">
+            Printed: Dariusz Kowalczyk<br>
+            Role: Production Supervisor, Suite 4B<br>
+            Signed: 14-Aug-2024 · 13:42 (system clock, UTC-4)
+          </div>
+        </div>
+        <div class="signoff">
+          <label>QA Reviewer</label>
+          <div class="line sign-block">
+            <div class="sig">S. Whitfield</div>
+          </div>
+          <div class="meta">
+            Printed: Sarah Whitfield<br>
+            Role: QA Reviewer, Batch Disposition<br>
+            Signed: 15-Aug-2024 · 09:10 (system clock, UTC-4)
+          </div>
+        </div>
+        <div class="signoff">
+          <label>Qualified Person (QP)</label>
+          <div class="line sign-blank">— pending final release —</div>
+          <div class="meta">
+            Printed: —<br>
+            Role: Qualified Person, GxP Release Authority<br>
+            21 CFR Part 11 e-signature required prior to packaging release
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<div class="final-block" style="max-width:900px;margin:-1px auto 0;border:1px solid var(--line-heavy);border-top:none;">
+  <div style="font-family:Arial, Helvetica, sans-serif;font-size:11px;color:var(--ink-dim);text-transform:uppercase;letter-spacing:0.05em;">
+    Record Status
+  </div>
+  <div style="font-family:Arial, Helvetica, sans-serif;font-weight:700;font-size:14px;margin-top:4px;">
+    Stage complete — awaiting QP disposition prior to packaging release
+  </div>
+  <div class="stamp-area">
+    <div class="stamp">SPECIMEN</div>
+  </div>
+</div>
+
+<p class="footer-note">
+  This is a wholly fictional document generated for training/reference purposes: the company, product, personnel, lot numbers, and results are invented and do not describe any real batch, product, or organization. This excerpt covers the granulation/compression stage only — raw material receipt &amp; release, packaging, and stability sample pull records are not shown. Do not use as evidence of GMP compliance or as a template submitted to any regulatory body.
+</p>
+
+</body>
+</html>

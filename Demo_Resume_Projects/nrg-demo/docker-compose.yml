@@ -1,0 +1,56 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: nrg-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-nrg}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-nrg}
+      POSTGRES_DB: ${POSTGRES_DB:-nrg}
+    ports:
+      - "${POSTGRES_PORT:-5433}:5432"
+    volumes:
+      - nrg_postgres_data:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-nrg} -d ${POSTGRES_DB:-nrg}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: nrg-qdrant
+    restart: unless-stopped
+    ports:
+      - "${QDRANT_HTTP_PORT:-6343}:6333"
+      - "${QDRANT_GRPC_PORT:-6344}:6334"
+    volumes:
+      - nrg_qdrant_data:/qdrant/storage
+    # No wget/curl/bash in this image (distroless-style), so no in-container
+    # HTTP healthcheck command is available -- readiness is verified from the
+    # host instead (see NRG_Implementation_Plan.md Phase 0/1 verification via
+    # scripts/check_qdrant_health.py hitting http://localhost:6343/readyz).
+
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    container_name: nrg-rabbitmq
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-nrg}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-nrg}
+    ports:
+      - "${RABBITMQ_PORT:-5673}:5672"
+      - "${RABBITMQ_MGMT_PORT:-15673}:15672"
+    volumes:
+      - nrg_rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "check_running"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+
+volumes:
+  nrg_postgres_data:
+  nrg_qdrant_data:
+  nrg_rabbitmq_data:

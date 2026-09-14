@@ -1,0 +1,515 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="doc-id" content="SOP-114-SPECIMEN">
+<meta name="doc-type" content="sop">
+<meta name="doc-title" content="SOP-114 Specimen Layout (Visual Reference Only)">
+<meta name="doc-status" content="draft">
+<meta name="doc-effective-date" content="2024-06-02">
+<meta name="doc-version" content="1">
+<title>SYNTHETIC EXAMPLE — Fictional SOP (Training Reference Only)</title>
+<style>
+  @media print {
+    .banner { position: fixed; }
+    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+  :root{
+    --paper:#fdfcf9;
+    --ink:#1a1a1a;
+    --ink-dim:#55524a;
+    --line:#c9c3b3;
+    --line-heavy:#8a8474;
+    --stamp:#a33a2f;
+    --field-bg:#f4f1e9;
+    --header-bg:#efe9d8;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background:#e7e3d8;
+    color:var(--ink);
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size:14px;
+    line-height:1.5;
+  }
+  .banner{
+    top:0; left:0; right:0;
+    background:var(--stamp);
+    color:#fff;
+    text-align:center;
+    padding:10px 16px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight:700;
+    font-size:13px;
+    letter-spacing:0.04em;
+    z-index:10;
+  }
+  .banner span{font-weight:400; letter-spacing:0.02em}
+  .sheet{
+    max-width:900px;
+    margin:56px auto 80px;
+    background:var(--paper);
+    border:1px solid var(--line-heavy);
+    box-shadow:0 2px 14px rgba(0,0,0,0.18);
+    position:relative;
+    overflow:hidden;
+  }
+  .watermark{
+    position:absolute;
+    top:44%; left:50%;
+    transform:translate(-50%,-50%) rotate(-28deg);
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:92px;
+    font-weight:800;
+    color:rgba(163,58,47,0.08);
+    white-space:nowrap;
+    pointer-events:none;
+    z-index:1;
+    user-select:none;
+  }
+  .content{position:relative; z-index:2}
+
+  .doc-header{
+    background:var(--header-bg);
+    border-bottom:2px solid var(--line-heavy);
+    padding:18px 32px;
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:8px 24px;
+  }
+  .doc-header .company{
+    font-family:Arial, Helvetica, sans-serif;
+    font-weight:800;
+    font-size:18px;
+    letter-spacing:0.02em;
+  }
+  .doc-header .company small{
+    display:block;
+    font-weight:400;
+    font-size:11px;
+    color:var(--ink-dim);
+    letter-spacing:0.06em;
+    margin-top:2px;
+  }
+  .doc-header .doc-id{
+    text-align:right;
+    font-family: 'Courier New', monospace;
+    font-size:12px;
+    color:var(--ink-dim);
+  }
+  .doc-header .title{
+    grid-column:1 / -1;
+    font-family:Arial, Helvetica, sans-serif;
+    font-weight:700;
+    font-size:15px;
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    margin-top:6px;
+    border-top:1px solid var(--line);
+    padding-top:10px;
+  }
+
+  .field-grid{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:1px;
+    background:var(--line);
+    border-bottom:2px solid var(--line-heavy);
+  }
+  .field{
+    background:var(--field-bg);
+    padding:8px 12px;
+  }
+  .field label{
+    display:block;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:9.5px;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    color:var(--ink-dim);
+    margin-bottom:3px;
+  }
+  .field .val{
+    font-family:'Courier New', monospace;
+    font-size:13px;
+    font-weight:700;
+  }
+
+  section.block{padding:20px 32px; border-bottom:1px solid var(--line)}
+  section.block:last-of-type{border-bottom:none}
+  .block h2{
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:12.5px;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    color:var(--ink);
+    margin:0 0 12px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .block h2 .num{
+    background:var(--ink);
+    color:var(--paper);
+    font-size:11px;
+    width:20px;height:20px;
+    display:inline-flex;align-items:center;justify-content:center;
+    border-radius:2px;
+  }
+  .block p{margin:0 0 10px}
+  .block p:last-child{margin-bottom:0}
+
+  .sub-h{
+    font-family:Arial, Helvetica, sans-serif;
+    font-weight:700;
+    font-size:12px;
+    margin:16px 0 6px;
+    color:var(--ink);
+  }
+  .sub-h:first-child{margin-top:0}
+
+  ol.steps{
+    margin:0;
+    padding-left:0;
+    list-style:none;
+    counter-reset:step;
+  }
+  ol.steps li{
+    counter-increment:step;
+    position:relative;
+    padding:8px 8px 8px 40px;
+    border-bottom:1px solid var(--line);
+  }
+  ol.steps li:last-child{border-bottom:none}
+  ol.steps li::before{
+    content:counter(step);
+    position:absolute;
+    left:0; top:8px;
+    width:26px;height:26px;
+    background:var(--field-bg);
+    border:1px solid var(--line-heavy);
+    border-radius:3px;
+    font-family:Arial, Helvetica, sans-serif;
+    font-weight:700;
+    font-size:12px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .limit-tag{
+    display:inline-block;
+    background:var(--header-bg);
+    border:1px solid var(--line-heavy);
+    font-family:'Courier New', monospace;
+    font-size:11.5px;
+    padding:1px 7px;
+    border-radius:3px;
+    margin:0 2px;
+  }
+  .critical-tag{
+    display:inline-block;
+    background:var(--stamp);
+    color:#fff;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:9.5px;
+    font-weight:700;
+    letter-spacing:0.04em;
+    padding:1px 7px;
+    border-radius:3px;
+    margin-left:6px;
+    vertical-align:middle;
+  }
+
+  table{width:100%; border-collapse:collapse; font-size:12.5px}
+  th,td{border:1px solid var(--line); padding:6px 8px; text-align:left; vertical-align:top}
+  th{
+    background:var(--header-bg);
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    color:var(--ink-dim);
+  }
+  td.num-cell{font-family:'Courier New', monospace; white-space:nowrap}
+
+  .rev-history th, .rev-history td{font-size:11.5px}
+
+  .sign-block{line-height:1.3}
+  .sign-block .sig{
+    font-family:'Brush Script MT', cursive;
+    color:#2a4a7a;
+    font-size:15px;
+  }
+
+  .signoff-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
+    margin-top:8px;
+  }
+  .signoff{
+    border:1px solid var(--line);
+    padding:12px;
+    background:var(--field-bg);
+  }
+  .signoff label{
+    display:block;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:9.5px;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    color:var(--ink-dim);
+    margin-bottom:6px;
+  }
+  .signoff .line{
+    border-bottom:1px solid var(--ink-dim);
+    min-height:26px;
+    display:flex;
+    align-items:flex-end;
+    padding-bottom:2px;
+  }
+  .signoff .meta{
+    font-family:'Courier New', monospace;
+    font-size:10.5px;
+    color:var(--ink-dim);
+    margin-top:5px;
+  }
+
+  .final-block{
+    background:var(--header-bg);
+    border-top:3px double var(--line-heavy);
+    padding:20px 32px;
+    max-width:900px;
+    margin:-1px auto 0;
+    border-left:1px solid var(--line-heavy);
+    border-right:1px solid var(--line-heavy);
+  }
+  .stamp-area{
+    display:flex;
+    justify-content:flex-end;
+    margin-top:10px;
+  }
+  .stamp{
+    border:3px solid #2f6e3f;
+    color:#2f6e3f;
+    font-family:Arial, Helvetica, sans-serif;
+    font-weight:800;
+    font-size:15px;
+    letter-spacing:0.08em;
+    padding:8px 18px;
+    transform:rotate(-4deg);
+    border-radius:4px;
+    opacity:0.85;
+  }
+
+  .footer-note{
+    max-width:900px;
+    margin:0 auto 60px;
+    padding:0 16px;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:11.5px;
+    color:#6b6b6b;
+    text-align:center;
+  }
+</style>
+</head>
+<body>
+
+<div class="banner">
+  SYNTHETIC EXAMPLE — NOT A REAL SOP <span>· fictional company and procedure · for structural/educational reference only</span>
+</div>
+
+<div class="sheet">
+  <div class="watermark">SPECIMEN</div>
+  <div class="content">
+
+    <div class="doc-header">
+      <div class="company">
+        AURELIA PHARMA SCIENCES <small>(fictional company — not affiliated with any real manufacturer)</small>
+      </div>
+      <div class="doc-id">
+        SOP-114, Rev. 4<br>Effective 02-Jun-2024
+      </div>
+      <div class="title">Standard Operating Procedure — Blend Uniformity Control &amp; Hold-Time Management</div>
+    </div>
+
+    <div class="field-grid">
+      <div class="field"><label>SOP Number</label><div class="val">SOP-114</div></div>
+      <div class="field"><label>Revision</label><div class="val">4</div></div>
+      <div class="field"><label>Effective Date</label><div class="val">02-Jun-2024</div></div>
+      <div class="field"><label>Next Review Due</label><div class="val">02-Jun-2026</div></div>
+
+      <div class="field"><label>Department</label><div class="val">Solid Dose Manufacturing</div></div>
+      <div class="field"><label>Applies To</label><div class="val">Granulation &amp; Compression, Suites 4A/4B</div></div>
+      <div class="field"><label>Document Owner</label><div class="val">Manufacturing Quality Lead</div></div>
+      <div class="field"><label>Supersedes</label><div class="val">SOP-114, Rev. 3 (14-Jan-2022)</div></div>
+    </div>
+
+    <section class="block">
+      <h2><span class="num">1</span>Purpose &amp; Scope</h2>
+      <p>
+        This procedure defines the acceptance criteria, sampling method, and permissible hold time between
+        final blending and tablet compression for solid oral dosage products manufactured in Suites 4A/4B,
+        in order to ensure blend homogeneity is maintained through to compression and that content uniformity
+        of the finished tablet is not compromised by excipient settling or de-mixing during hold.
+      </p>
+      <p>
+        This SOP applies to all products on the standard blend-then-compress process train. It does not
+        apply to direct-compression formulations without a pre-blend hold step, or to continuous
+        manufacturing lines (see SOP-140).
+      </p>
+    </section>
+
+    <section class="block">
+      <h2><span class="num">2</span>Definitions</h2>
+      <div class="sub-h">Blend Uniformity RSD</div>
+      <p>Relative standard deviation of active ingredient assay across ten stratified blend samples, expressed as a percentage.</p>
+      <div class="sub-h">Hold Time</div>
+      <p>Elapsed time from confirmed blend completion (final blender stop) to the start of tablet compression feed.</p>
+      <div class="sub-h">Action Limit</div>
+      <p>The upper boundary beyond which a result is out of specification (OOS) and the batch must be quarantined pending investigation, distinct from the routine target range which triggers a deviation but not an automatic quarantine.</p>
+    </section>
+
+    <section class="block">
+      <h2><span class="num">3</span>Responsibilities</h2>
+      <table>
+        <thead><tr><th style="width:220px">Role</th><th>Responsibility</th></tr></thead>
+        <tbody>
+          <tr><td>Production Operator</td><td>Executes blending, pulls IPC samples, records blend completion time, initiates hold-time clock in MES.</td></tr>
+          <tr><td>Production Supervisor</td><td>Sequences press changeover/scheduling to avoid hold-time overrun; escalates if compression cannot start within target.</td></tr>
+          <tr><td>QA / IPC Analyst</td><td>Performs blend uniformity testing, confirms result against specification prior to compression release.</td></tr>
+          <tr><td>Quality Reviewer</td><td>Reviews any hold-time or RSD excursion; opens deviation record if target exceeded.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="block">
+      <h2><span class="num">4</span>Procedure</h2>
+
+      <div class="sub-h">4.1 — Blend Sampling</div>
+      <ol class="steps">
+        <li>Upon blender stop, record blend completion time in the batch record and MES.</li>
+        <li>Pull ten (10) stratified samples per the current Sampling Plan (SOP-114 Attachment A), from top, middle, and bottom strata of the blend vessel.</li>
+        <li>Submit samples to QA/IPC lab for active ingredient assay; do not proceed to compression pending result unless a validated rapid in-line method is qualified for this product (see product-specific Master Formula).</li>
+      </ol>
+
+      <div class="sub-h">4.2 — Acceptance Criteria</div>
+      <table>
+        <thead><tr><th>Parameter</th><th>Target</th><th>Action Limit</th><th>Disposition if exceeded</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Blend Uniformity RSD</td>
+            <td class="num-cell">≤ 3.0%</td>
+            <td class="num-cell">5.0%</td>
+            <td>3.0–5.0%: open deviation record, proceed pending impact assessment. &gt;5.0%: quarantine batch, OOS investigation per SOP-201.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="sub-h">4.3 — Blend-to-Compression Hold Time <span class="critical-tag">GxP CRITICAL PARAMETER</span></div>
+      <p>
+        Maximum hold time between confirmed blend completion and start of compression feed is
+        <span class="limit-tag">30 minutes</span> (target), with an upper limit of
+        <span class="limit-tag">45 minutes</span> before mandatory re-test of blend uniformity is required
+        prior to compression.
+      </p>
+      <ol class="steps">
+        <li>Production Supervisor confirms tablet press availability <em>before</em> initiating final blend, to minimize queue time.</li>
+        <li>If projected press availability will exceed the 30-minute target at the time blending is initiated, Supervisor must escalate to reschedule press changeover or hold blend start until press is ready.</li>
+        <li>If hold time reaches 30–45 minutes despite scheduling controls, this is a reportable deviation (minor) even if RSD result remains within specification, and must be logged per Section 5 below.</li>
+        <li>If hold time exceeds 45 minutes, blend uniformity must be re-sampled and re-tested before compression may proceed; do not rely on the original result.</li>
+      </ol>
+
+      <div class="sub-h">4.4 — Compression Release</div>
+      <ol class="steps">
+        <li>QA/IPC confirms blend RSD result meets acceptance criteria (Section 4.2) and hold time is within limits (Section 4.3) before authorizing compression start.</li>
+        <li>Record blend release authorization (analyst initials, time) in the batch record prior to Step 6 (Compression) sign-off.</li>
+      </ol>
+    </section>
+
+    <section class="block">
+      <h2><span class="num">5</span>Deviation Handling</h2>
+      <p>
+        Any excursion against Section 4.2 (RSD 3.0–5.0%) or Section 4.3 (hold time 30–45 min) must be recorded
+        as a deviation referencing this SOP number and section, per the site Deviation Management procedure
+        (SOP-201). The deviation record must include root cause analysis addressing why the hold-time or RSD
+        target was not met, and a CAPA if a systemic or recurring cause (e.g., scheduling, equipment
+        availability) is identified.
+      </p>
+      <p style="font-size:12px; color:var(--ink-dim)">
+        Example: a hold time of 38 minutes together with an RSD of 4.6% is within action limits on both
+        parameters individually, but both being outside target simultaneously should be evaluated together
+        for a shared root cause (see companion deviation record template, DEV-XXXX-XXX-A).
+      </p>
+    </section>
+
+    <section class="block">
+      <h2><span class="num">6</span>Revision History</h2>
+      <table class="rev-history">
+        <thead><tr><th style="width:70px">Rev.</th><th style="width:110px">Effective Date</th><th>Summary of Change</th><th>Approved By</th></tr></thead>
+        <tbody>
+          <tr><td class="num-cell">1</td><td class="num-cell">10-Mar-2018</td><td>Initial issue.</td><td>Manufacturing Quality Lead</td></tr>
+          <tr><td class="num-cell">2</td><td class="num-cell">22-Nov-2019</td><td>Added stratified sampling requirement (Section 4.1); prior version specified single-point sampling only.</td><td>Manufacturing Quality Lead</td></tr>
+          <tr><td class="num-cell">3</td><td class="num-cell">14-Jan-2022</td><td>Introduced 45-minute hard limit requiring blend re-test (Section 4.3); prior revision had no upper hold-time bound.</td><td>Manufacturing Quality Lead</td></tr>
+          <tr><td class="num-cell">4</td><td class="num-cell">02-Jun-2024</td><td>Added pre-blend press-availability confirmation step (4.3.1) following site trend review of hold-time deviations; clarified combined RSD + hold-time excursions require joint root cause review (Section 5).</td><td>Manufacturing Quality Lead</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="block">
+      <h2><span class="num">7</span>Approvals</h2>
+      <div class="signoff-grid">
+        <div class="signoff">
+          <label>Document Owner</label>
+          <div class="line sign-block"><div class="sig">R. Fennimore</div></div>
+          <div class="meta">
+            Printed: Rachel Fennimore<br>
+            Role: Manufacturing Quality Lead<br>
+            28-May-2024 · 14:05
+          </div>
+        </div>
+        <div class="signoff">
+          <label>QA Approval</label>
+          <div class="line sign-block"><div class="sig">S. Whitfield</div></div>
+          <div class="meta">
+            Printed: Sarah Whitfield<br>
+            Role: QA Reviewer, Document Control<br>
+            30-May-2024 · 09:40
+          </div>
+        </div>
+        <div class="signoff">
+          <label>Site Quality Head</label>
+          <div class="line sign-block"><div class="sig">A. Reinholt</div></div>
+          <div class="meta">
+            Printed: Anders Reinholt<br>
+            Role: Site Quality Head — Effective Approval<br>
+            31-May-2024 · 11:15
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<div class="final-block">
+  <div style="font-family:Arial, Helvetica, sans-serif;font-size:11px;color:var(--ink-dim);text-transform:uppercase;letter-spacing:0.05em;">
+    Document Status
+  </div>
+  <div style="font-family:Arial, Helvetica, sans-serif;font-weight:700;font-size:14px;margin-top:4px;">
+    Approved &amp; Effective — current controlled version
+  </div>
+  <div class="stamp-area">
+    <div class="stamp">SPECIMEN</div>
+  </div>
+</div>
+
+<p class="footer-note">
+  This is a wholly fictional document generated for training/reference purposes: the company, procedure,
+  personnel, and revision history are invented and do not describe any real SOP or organization.
+  Cross-referenced against companion synthetic batch record (BMR-77214-Rev.C) and deviation record
+  (DEV-2024-0417-A) for structural consistency only. Do not use as evidence of GMP compliance or as a
+  template submitted to any regulatory body.
+</p>
+
+</body>
+</html>

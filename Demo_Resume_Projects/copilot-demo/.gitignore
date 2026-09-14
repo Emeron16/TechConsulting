@@ -1,0 +1,13 @@
+# Not a git repo yet, but this documents what should never sync to Drive
+# or be committed once git is initialized -- fast-changing binary/local state
+# that conflicts with Google Drive's sync daemon (file locks, partial syncs).
+
+.venv/
+__pycache__/
+*.pyc
+.env
+chroma_db/
+cache/
+*.db
+*.sqlite3
+.DS_Store

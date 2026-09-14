@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+cache/
+mlruns/
+models/
+airflow/logs/
+data/training/
+.DS_Store

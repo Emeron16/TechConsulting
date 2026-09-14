@@ -1,0 +1,63 @@
+# Union of copilot-demo/requirements.txt, nrg-demo/requirements.txt, and
+# volvo-demo/requirements.txt -- the shell needs all three demos' full
+# dependency trees available in the same venv, since any sidebar option can
+# be selected first in a live session and another selected afterward
+# without restarting the process. See NRG_Implementation_Plan.md Phase 9
+# for why a separate minimal shell-only venv (just streamlit+python-dotenv)
+# doesn't work: each *_wrapper.py imports its demo's full module tree at
+# call time, not just streamlit itself.
+#
+# Adding Volvo's dependency list (Phase 12) is a meaningfully heavier
+# install than the original two-demo merge -- torch, transformers, spacy,
+# and pyspark are all large native-extension packages. Verified installing
+# cleanly together with zero version conflicts against the existing
+# langchain/chromadb tree; see Volvo_Implementation_Plan.md Phase 12.
+#
+# Airflow itself is deliberately NOT listed here -- it runs via its own
+# Docker Compose stack (volvo-demo/airflow/docker-compose.airflow.yml),
+# never imported by the Streamlit process, keeping this venv's footprint
+# smaller than it would otherwise be.
+
+# --- from copilot-demo (Novartis) ---
+openai-agents
+mcp
+chromadb
+langsmith
+starlette<1.0
+
+# --- from nrg-demo (NRG Energy) ---
+langchain
+langchain-openai
+langchain-core
+qdrant-client
+fastembed
+unstructured[pdf]
+reportlab
+
+# --- from volvo-demo (Volvo) ---
+torch
+transformers
+accelerate
+spacy
+scikit-learn
+pandas
+matplotlib
+mlflow
+pyspark
+fastapi
+uvicorn[standard]
+httpx
+opensearch-py
+
+# --- shared by two or more ---
+psycopg[binary]
+aio-pika
+python-dotenv
+pyyaml
+streamlit
+markdown
+rank-bm25
+sentence-transformers
+diskcache
+pydantic
+tenacity
