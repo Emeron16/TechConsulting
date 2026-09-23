@@ -8,6 +8,8 @@
 
 ## 1. Architecture Diagram
 
+**Proposed retrieval update:** LangChain calls Bedrock Knowledge Bases for managed retrieval; Knowledge Bases queries OpenSearch Serverless. LangChain then constructs the prompt and calls the Bedrock model separately. This revises the proposed architecture, not the local demo code, which still uses custom direct retrieval.
+
 ```mermaid
 flowchart TB
     subgraph USERS["END USERS"]
@@ -78,7 +80,6 @@ flowchart TB
 
     CHAIN --> REDIS
     REDIS --> CHAIN
-    CHAIN --> OPENSEARCH
     CHAIN --> KB
     KB --> OPENSEARCH
     OPENSEARCH --> TITAN
@@ -125,6 +126,7 @@ sequenceDiagram
     participant FA as FastAPI Service
     participant LC as LangChain Orchestrator
     participant Cache as Redis
+    participant KB as Bedrock Knowledge Bases
     participant OS as OpenSearch Serverless
     participant BR as Amazon Bedrock
     participant CW as CloudWatch
@@ -135,8 +137,10 @@ sequenceDiagram
     FA->>LC: Invoke orchestration chain
     LC->>Cache: Check cache for similar prior query
     Cache-->>LC: Cache miss
-    LC->>OS: Hybrid retrieval - BM25 plus semantic search, filtered by plan type and effective date
-    OS-->>LC: Ranked passages with citations
+    LC->>KB: Retrieve evidence with supported hybrid search and metadata filters
+    KB->>OS: Search configured vector store
+    OS-->>KB: Matching passages and metadata
+    KB-->>LC: Retrieved passages and source references
     LC->>BR: Generate grounded answer from retrieved context
     BR-->>LC: Draft answer plus source citations
     LC->>Cache: Store result for reuse
@@ -214,7 +218,7 @@ sequenceDiagram
 ### 2.6 Retrieval & Data Layer
 
 **Bedrock Knowledge Bases**
-- *What it does:* Manages the connective tissue between ingested documents and retrieval-ready vector data, automating chunking and embedding generation as part of the Bedrock ecosystem.
+- *What it does:* Manages ingestion, chunking, and embedding generation, and exposes the retrieval API used by LangChain to query the configured OpenSearch Serverless store in the proposed design.
 - *Who's in charge:* Data Engineers.
 - *Why this over alternatives (building a fully custom ingestion-to-embedding pipeline):* Using the managed Knowledge Bases capability meant less custom pipeline code to build and maintain for the chunking/embedding hand-off specifically, letting the team focus engineering effort on the harder problem — hybrid retrieval quality — instead of re-solving a largely solved integration problem.
 - *Phase:* Phase 3 (Ingestion Pipeline Build), weeks 10–18.

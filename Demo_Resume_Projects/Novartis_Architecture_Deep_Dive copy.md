@@ -40,6 +40,7 @@ flowchart TB
         MCPBATCH["MCP Server: Batch Records"]
         MCPSOP["MCP Server: SOP Repository"]
         MCPCAPA["MCP Server: CAPA / Enterprise Systems"]
+        MCPDEV["MCP Server: Deviation Management"]
     end
 
     subgraph REASON["REASONING LAYER"]
@@ -50,7 +51,11 @@ flowchart TB
         SEARCH["Azure AI Search<br/>Hybrid (keyword + vector) index"]
         DI["Azure AI Document Intelligence<br/>OCR + layout + table extraction"]
         BLOB["Azure Blob Storage<br/>Controlled document repository"]
-        SQLDB["Azure SQL Database<br/>Batch metadata / deviation status"]
+        SQLDB["Azure SQL Database<br/>Operational records + draft references / versions / review status"]
+        DRAFTBLOB["Azure Blob Storage — Draft Container<br/>Restricted access; excluded from approved search"]
+        DRAFTSAVE["Backend Draft Persistence<br/>Save file + metadata before notifying reviewers"]
+        APPROVAL["Authorized Approval Handler<br/>Record decision for reviewed version"]
+        INGEST["Approved Document Ingestion<br/>Extract if needed, chunk, embed, index"]
     end
 
     subgraph ASYNC["ASYNC WORKFLOW LAYER"]
@@ -94,6 +99,7 @@ flowchart TB
 
     DEVAGENT --> MCPQUALITY
     DEVAGENT --> MCPBATCH
+    DEVAGENT --> MCPDEV
     BATCHAGENT --> MCPBATCH
     SOPAGENT --> MCPSOP
     CAPAAGENT --> MCPCAPA
@@ -101,13 +107,27 @@ flowchart TB
 
     MCPQUALITY --> SEARCH
     MCPBATCH --> SQLDB
-    MCPBATCH --> DI
+    MCPBATCH --> SEARCH
     MCPSOP --> SEARCH
     MCPCAPA --> SQLDB
+    MCPCAPA --> SEARCH
     MCPCAPA --> SERVICEBUS
+    MCPDEV --> SQLDB
 
-    DI --> BLOB
-    SEARCH --> BLOB
+    DRAFTSAVE --> DRAFTBLOB
+    DRAFTSAVE --> SQLDB
+    DRAFTSAVE -->|After persistence: draft reference| SERVICEBUS
+    GATEWAY -->|Authorized reviewer reads| DRAFTBLOB
+    GATEWAY -->|Review metadata| SQLDB
+    ESIGN --> APPROVAL
+    APPROVAL -->|Approved version and status| SQLDB
+    DRAFTBLOB -->|Reviewed version only| APPROVAL
+    APPROVAL -->|Publish approved document| BLOB
+    BLOB --> INGEST
+    INGEST -->|Extraction when needed| DI
+    DI -->|Extracted content| INGEST
+    INGEST -->|Approved content + permissions + version| SEARCH
+    SEARCH -->|Source references| BLOB
 
     SUPERVISOR --> AOAI
     DEVAGENT --> AOAI
@@ -121,7 +141,7 @@ flowchart TB
     SOPAGENT --> CRITIC
     CAPAAGENT --> CRITIC
 
-    CRITIC --> SERVICEBUS
+    CRITIC -->|Draft requiring review| DRAFTSAVE
     CRITIC -.fails grounding check,<br/>retry with feedback.-> SUPERVISOR
     SERVICEBUS --> REVIEWQUEUE
     REVIEWQUEUE --> QP
@@ -133,6 +153,7 @@ flowchart TB
     MCPBATCH -.auth.-> MANAGEDID
     MCPSOP -.auth.-> MANAGEDID
     MCPCAPA -.auth.-> MANAGEDID
+    MCPDEV -.auth.-> MANAGEDID
     MANAGEDID -.-> KEYVAULT
 
     ACR --> AKS
@@ -143,6 +164,7 @@ flowchart TB
     AKS === MCPBATCH
     AKS === MCPSOP
     AKS === MCPCAPA
+    AKS === MCPDEV
 
     SUPERVISOR -.telemetry.-> MONITOR
     MCPQUALITY -.telemetry.-> MONITOR
@@ -153,6 +175,18 @@ flowchart TB
     REVIEWQUEUE -.-> AUDIT
 ```
 
+### Proposed production design — draft storage and approval lifecycle
+
+**Design decision, not a claim of implemented demo behavior:** CAPA and deviation draft files are stored in a separate, access-controlled Azure Blob Storage container. They are kept separate from the approved document repository and excluded from its Azure AI Search index.
+
+1. **Persist the draft:** The backend saves the draft file in the draft container. Azure SQL stores its identifier, Blob reference, version, creator, review status, and automated-validation status. A draft that fails grounding remains explicitly marked as unvalidated.
+2. **Notify reviewers:** After file and metadata persistence succeeds, the backend publishes a review notification containing the draft reference to Azure Service Bus. Service Bus transports the event; it is not the authoritative draft store. Failed notification delivery must be retried without creating duplicate review tasks.
+3. **Review through the application:** Authorized reviewers load the draft and metadata through the backend. Access checks apply to the file as well as its metadata. Editing creates a new draft version; the decision must identify the exact version reviewed.
+4. **Record the decision:** Rejected or unresolved drafts stay outside approved-document retrieval. An authorized approval handler records approval and publishes the approved version to the controlled document repository, retaining the draft history and audit linkage according to the retention policy.
+5. **Ingest approved content:** The ingestion pipeline processes the approved version, attaches permissions and version metadata, and indexes it in Azure AI Search. Document Intelligence is called only when extraction is needed; available generated text can proceed directly to chunking and embedding. Approval alone does not imply indexing has completed.
+
+The diagram's draft-storage nodes and approval/ingestion connections describe this proposed lifecycle. Other existing diagram connections are unchanged; this update does not establish that the demo implements production persistence or approval.
+
 ### Runtime example — how one deviation-review question actually flows through the system
 
 ```mermaid
@@ -162,7 +196,7 @@ sequenceDiagram
     participant GW as FastAPI Gateway
     participant Sup as Supervisor Agent
     participant Dev as Deviation Review Agent
-    participant MCP as MCP Server (Quality Docs + Batch)
+    participant MCP as MCP Server (Quality Docs + Batch + Deviation Mgmt)
     participant Srch as Azure AI Search
     participant AOAI as Azure OpenAI
     participant Critic as Critic / Grounding Validator
@@ -258,7 +292,7 @@ Each entry follows the same structure: **What it does** · **Who's in charge** �
 - *Phase:* Phase 4 (Agent & MCP Development), weeks 15–28.
 
 **Deviation Review Agent, Batch Record Analysis Agent, SOP Interpretation Agent, CAPA Decision Support Agent**
-- *What they do:* Four specialist agents, each scoped to one workflow — reviewing deviation reports against criteria, extracting/summarizing batch record data, interpreting SOP language against a specific situation, and drafting CAPA justifications, respectively.
+- *What they do:* Four specialist agents, each scoped to one workflow — reviewing deviation reports against escalation/classification criteria and drafting a proposed disposition (classification + investigation-closure summary, via the Deviation Management server, pending human review), extracting/summarizing batch record data, interpreting SOP language against a specific situation, and drafting CAPA justifications, respectively. The Deviation Review Agent is the widest-scoped of the four — Quality Documents (deviation/SOP narrative retrieval) and Batch Records (structured disposition context) plus Deviation Management (disposition drafting) — since deviation questions routinely need SOP escalation criteria and batch-level facts to reason about correctly, and the Supervisor routes cross-domain deviation questions here rather than fanning out to a second agent (see the Supervisor's single-target handoff note above).
 - *Who's in charge:* ML/AI Engineers built each agent's tool bindings and prompts under your architectural direction; Quality/Compliance SMEs validated that each agent's outputs matched real investigative reasoning.
 - *Why four specialist agents over one generalist agent:* Matches the MCP scoping principle above — each agent only needs (and is only granted) access to the tools relevant to its job, which is both a security boundary and a way to keep each agent's behavior easier to test, validate, and explain to an auditor.
 - *Phase:* Phase 4, weeks 15–28, iterated through Phase 6 validation.
@@ -274,10 +308,11 @@ Each entry follows the same structure: **What it does** · **Who's in charge** �
 
 ### 2.5 MCP Governance Layer
 
-**MCP Server: Quality Documents / MCP Server: Batch Records / MCP Server: SOP Repository / MCP Server: CAPA & Enterprise Systems**
-- *What they do:* Each is a narrow, purpose-built interface that exposes only specific, approved operations (e.g., "search approved SOPs," "fetch batch metadata by ID") to the agents — the agents never get direct, unrestricted database or file-system access.
+**MCP Server: Quality Documents / MCP Server: Batch Records / MCP Server: SOP Repository / MCP Server: CAPA & Enterprise Systems / MCP Server: Deviation Management**
+- *What they do:* Each is a narrow, purpose-built interface that exposes only specific, approved operations (e.g., "search approved SOPs," "fetch batch metadata by ID") to the agents — the agents never get direct, unrestricted database or file-system access. The Deviation Management server is the structural twin of the CAPA server's draft-and-promote pattern, but mechanically different: a deviation record already exists pre-disposition, so its `create_deviation_disposition` tool drafts a proposed classification (critical/major/minor) and investigation-closure summary that, on human approval, **updates** the existing deviation record in place — whereas a CAPA record doesn't exist until a draft is promoted (an **insert**). Both are `draft_pending_review` until a QP signs off; neither tool writes the authoritative record itself.
 - *Who's in charge:* You defined the governance boundaries (what each server exposes); ML/AI Engineers implemented the servers; IT Security & Governance reviewed and approved the access scope for each one before go-live.
 - *Why MCP over alternatives (agents calling internal REST APIs directly, or a single shared "do anything" tool):* Direct API access from an LLM agent is much harder to govern — you'd need to build the same access-control logic repeatedly inside every agent instead of once, centrally, in the MCP layer. MCP also gives a uniform audit point: every tool call, from every agent, passes through a place where it can be logged and scoped, which is exactly what a GxP audit trail requires.
+- *Why a separate Deviation Management server rather than folding disposition-drafting into the Quality Documents server the Deviation Review Agent already uses:* Quality Documents is a read-only retrieval surface (search/fetch approved documents); disposition drafting is a write-capable operation with real downstream consequence (closing an investigation). Keeping write-capable, consequential operations in their own narrowly-scoped server — the same separation CAPA already gets — means a security review of "what can write to a deviation record" is a review of one small server's tool surface, not an audit of everything Quality Documents exposes.
 - *Phase:* Phase 4, weeks 15–28.
 
 ### 2.6 Reasoning Layer
