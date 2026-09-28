@@ -1,0 +1,24 @@
+*** PORTAL SUBMISSION — PRIOR AUTHORIZATION REQUEST ***
+Submitted via Provider Web Portal
+
+Patient ID: MEM-88213456
+Patient Name: J. Alvarez (synthetic demo patient)
+Date of Birth: 04/12/1979
+
+Requesting Provider: Dr. Karen Wu, DPT — Lakeside Physical Therapy Group
+Ordering NPI: 1928374650
+
+Diagnosis Code(s): M54.5 (Low back pain)
+Procedure Code(s) Requested: 97110 (Therapeutic exercise, PT)
+
+Urgency: Routine
+
+Clinical Notes:
+Patient is a 46-year-old referred by PCP Dr. Sandra Lee for outpatient physical therapy
+evaluation and treatment of mechanical low back pain. Patient reports 3 weeks of dull low back
+pain with difficulty bending and prolonged sitting, rating pain 4/10. No radiation to legs, no
+numbness or weakness, no bowel/bladder changes, no history of trauma or malignancy. Requesting
+initial evaluation plus standard course of therapeutic exercise, 2x/week for 4 weeks (8 visits
+total). No red-flag symptoms present on review of systems.
+
+Requested visits: 1 evaluation + 8 treatment visits.

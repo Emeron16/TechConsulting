@@ -1,0 +1,97 @@
+{
+  "job_id": "5bb449c7f78804cc009fd36b",
+  "status": "completed",
+  "created_at": 1790354480.173915,
+  "synthetic_demo_only": true,
+  "format": "ExtractedRequest",
+  "schema": {
+    "description": "Structured fields pulled from the raw intake document (Component 1: Intelligent\nDocument Intake). Diagnosis/procedure codes must be taken verbatim, never inferred.",
+    "properties": {
+      "patient_id": {
+        "description": "Patient identifier as it appears in the document",
+        "title": "Patient Id",
+        "type": "string"
+      },
+      "date_of_birth": {
+        "description": "Patient date of birth, as written in the document",
+        "title": "Date Of Birth",
+        "type": "string"
+      },
+      "diagnosis_codes": {
+        "description": "ICD-10 codes exactly as they appear, never inferred",
+        "items": {
+          "type": "string"
+        },
+        "title": "Diagnosis Codes",
+        "type": "array"
+      },
+      "procedure_codes": {
+        "description": "CPT/HCPCS codes exactly as they appear in the request",
+        "items": {
+          "type": "string"
+        },
+        "title": "Procedure Codes",
+        "type": "array"
+      },
+      "requesting_provider": {
+        "description": "Name of the requesting/treating provider",
+        "title": "Requesting Provider",
+        "type": "string"
+      },
+      "ordering_npi": {
+        "default": "",
+        "description": "Ordering provider NPI, if present",
+        "title": "Ordering Npi",
+        "type": "string"
+      },
+      "clinical_notes": {
+        "description": "Verbatim relevant clinical narrative preserved from the document",
+        "title": "Clinical Notes",
+        "type": "string"
+      },
+      "urgency": {
+        "description": "routine / urgent / stat, inferred from clinical context",
+        "enum": [
+          "routine",
+          "urgent",
+          "stat"
+        ],
+        "title": "Urgency",
+        "type": "string"
+      },
+      "confidence_score": {
+        "description": "Extraction confidence (document/OCR clarity), as a number from 0.0 to 1.0",
+        "title": "Confidence Score",
+        "type": "number"
+      },
+      "extraction_notes": {
+        "default": "",
+        "description": "Anything ambiguous or low-confidence about this extraction",
+        "title": "Extraction Notes",
+        "type": "string"
+      }
+    },
+    "required": [
+      "patient_id",
+      "date_of_birth",
+      "requesting_provider",
+      "clinical_notes",
+      "urgency",
+      "confidence_score"
+    ],
+    "title": "ExtractedRequest",
+    "type": "object"
+  },
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are the document-intake extraction agent in a prior-authorization pipeline for a regional health plan. You will be given the raw text of a prior authorization request (from a fax, PDF, portal submission, or provider upload).\n\nExtract the structured fields exactly as specified. Rules:\n- Diagnosis codes (ICD-10) and procedure codes (CPT/HCPCS) must be taken VERBATIM from the text. Never infer or guess a code that is not explicitly written down. If none are present, return an empty list for that field.\n- Preserve the clinically relevant narrative verbatim in clinical_notes (you may trim obvious boilerplate/header noise, but do not paraphrase clinical content).\n- urgency must reflect what the document actually says or clearly implies (e.g. \"STAT\", \"urgent\", explicit time pressure) \u2014 default to \"routine\" if nothing indicates otherwise.\n- confidence_score reflects how clearly and unambiguously the document text supports this extraction (document/OCR clarity), NOT your opinion of the clinical case. Use lower scores if text is garbled, fields are ambiguous, or required fields are simply absent.\n- Use extraction_notes to flag anything ambiguous, contradictory, or low-confidence.\n"
+    },
+    {
+      "role": "user",
+      "content": "Raw intake document text:\n\n*** FAX TRANSMISSION \u2014 PRIOR AUTHORIZATION REQUEST ***\nFax received: (unstructured scan, transcribed)\n\nPatient ID: MEM-77102934\nPatient Name: R. Nakamura (synthetic demo patient)\nDate of Birth: 09/23/1985\n\nRequesting Provider: Dr. Michael Ortiz, MD \u2014 Summit Family Medicine\nOrdering NPI: 1745829301\n\nDiagnosis Code(s): M54.5 (Low back pain)\nProcedure Code(s) Requested: 72148 (MRI lumbar spine without contrast)\n\nUrgency: Routine\n\nClinical Notes:\nPatient presents with 7 weeks of radiculopathy symptoms: low back pain radiating into the left\nbuttock and posterior thigh, worsening over the past 2 weeks. No bowel or bladder dysfunction.\nNo fever, no unexplained weight loss, no history of cancer. No trauma. Patient is requesting\nimaging to evaluate for structural cause given persistent radiculopathy of 7 weeks' duration.\nProvider requests MRI lumbar spine without contrast to further evaluate.\n\n(No documentation of physical therapy, medication trial, or other conservative management\nprovided in this submission.)\n"
+    }
+  ],
+  "started_at": 1790354480.9265265,
+  "finished_at": 1790354488.7430923
+}

@@ -1,0 +1,16 @@
+{
+  "patient_id": "",
+  "date_of_birth": "",
+  "diagnosis_codes": [
+    "M54.5"
+  ],
+  "procedure_codes": [
+    "72148"
+  ],
+  "requesting_provider": "Dr. Avery Chen - Example Spine Clinic",
+  "ordering_npi": "1928374650",
+  "clinical_notes": "Patient reports 8 weeks of pain in the lower back with intermittent radiculopathy into the left leg. Symptoms interfere with sitting and work. The current examination documents stable gait and no progressive neurological deficit. No bowel or bladder changes, fever, recent trauma, or history of malignancy are reported. No implanted device or other MRI contraindication is documented. The clinician requests MRI lumbar spine without contrast to further evaluate persistent symptoms. This submission includes only the current visit note.",
+  "urgency": "routine",
+  "confidence_score": 0.6,
+  "extraction_notes": "Synthetic demo record (patient name Morgan Reed, synthetic). Required identity fields are ABSENT: there is no patient/member ID and no date of birth in the document. Both are left empty and were not inferred. Only the current visit note was submitted, with no conservative-treatment history. Confidence is lowered for the missing required fields; it is a self-reported estimate, not measured accuracy."
+}

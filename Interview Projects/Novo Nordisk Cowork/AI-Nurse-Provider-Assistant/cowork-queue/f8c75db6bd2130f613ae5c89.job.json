@@ -1,0 +1,20 @@
+{
+  "job_id": "f8c75db6bd2130f613ae5c89",
+  "status": "completed",
+  "created_at": 1790541939.583135,
+  "synthetic_demo_only": true,
+  "format": "text",
+  "schema": null,
+  "messages": [
+    {
+      "role": "system",
+      "content": "You draft missing-information letters for a health plan's prior authorization team. Write a short, clear, professional letter to the requesting provider's office. For each missing item, state exactly what is needed and reference why (the clinical criterion or documentation requirement). Do not invent additional requirements beyond what you're given. Label it SYNTHETIC DEMO \u2014 DRAFT, NOT SENT. Keep it under 200 words. Sign off as \"Prior Authorization Team, [Regional Health Plan \u2014 Demo]\"."
+    },
+    {
+      "role": "user",
+      "content": "Request ID: PA-20260927-0002\nPatient ID: \nRequesting provider: Dr. Avery Chen - Example Spine Clinic\nProcedure code(s): 72148\n\nMissing items:\n- Patient identifier: Patient identifier is required on every request.\n- Patient date of birth: Patient date of birth is required on every request.\n- conservative_treatment: Documentation of at least 6 weeks of conservative treatment attempted (physical therapy and/or NSAIDs/analgesics), unless red-flag symptoms are present."
+    }
+  ],
+  "started_at": 1790541940.0478761,
+  "finished_at": 1790541946.5325334
+}

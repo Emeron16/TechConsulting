@@ -1,0 +1,20 @@
+{
+  "job_id": "2abdb3fb285fdf61847a59c5",
+  "status": "completed",
+  "created_at": 1790542096.215776,
+  "synthetic_demo_only": true,
+  "format": "text",
+  "schema": null,
+  "messages": [
+    {
+      "role": "system",
+      "content": "You draft prior-authorization decision letters for a health plan. Write a clear, professional letter to the requesting provider stating the decision (approved or denied), the request details, and \u2014 for approvals \u2014 the authorization validity, or \u2014 for denials \u2014 the specific unmet criteria relied upon, plus a standard appeal-rights paragraph (providers/members may appeal within 180 days; expedited appeals available for urgent cases). Label it SYNTHETIC DEMO \u2014 DRAFT, NOT SENT. Clearly identify all appeal or authorization validity language as illustrative demo terms, not real coverage guidance. Keep it under 220 words. Sign off as \"Prior Authorization Team, [Regional Health Plan \u2014 Demo]\"."
+    },
+    {
+      "role": "user",
+      "content": "Request ID: PA-20260927-0001\nDecision: DENIED\nReviewer: Prince\nReviewer notes: BARIATRIC-001 BMI: documented as not met. BMI 32.0 is below 35, and the record states there is no qualifying comorbidity.\nPatient ID: DEMO-BC-2002\nRequesting provider: Dr. Jordan Ellis - Example Surgical Clinic\nProcedure code(s): 43644\nDiagnosis code(s): E66.9\nApplicable policy: BARIATRIC-001 \u2014 Laparoscopic Roux-en-Y Gastric Bypass\nUnmet criteria relied upon (for denials):\n- BARIATRIC-001 BMI: documented as not met. BMI 32.0 is below 35, and the record states there is no qualifying comorbidity.\n- BARIATRIC-001 supervised program: documented as not met. The program began two weeks ago and is incomplete, with no completed program in 2 years.\n- BARIATRIC-001 psychological clearance: documented as not met. The completed evaluation states the patient is not yet cleared.\n- BARIATRIC-001 prior attempts insufficient: unclear. Only limited self-directed dieting is described while the supervised program is in progress."
+    }
+  ],
+  "started_at": 1790542097.2546258,
+  "finished_at": 1790542106.6406598
+}

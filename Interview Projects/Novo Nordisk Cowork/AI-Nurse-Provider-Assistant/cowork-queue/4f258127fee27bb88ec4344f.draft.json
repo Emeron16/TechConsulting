@@ -1,0 +1,16 @@
+{
+  "patient_id": "MEM-77102934",
+  "date_of_birth": "09/23/1985",
+  "diagnosis_codes": [
+    "M54.5"
+  ],
+  "procedure_codes": [
+    "72148"
+  ],
+  "requesting_provider": "Dr. Michael Ortiz, MD — Summit Family Medicine",
+  "ordering_npi": "1745829301",
+  "clinical_notes": "Patient presents with 7 weeks of radiculopathy symptoms: low back pain radiating into the left buttock and posterior thigh, worsening over the past 2 weeks. No bowel or bladder dysfunction. No fever, no unexplained weight loss, no history of cancer. No trauma. Patient is requesting imaging to evaluate for structural cause given persistent radiculopathy of 7 weeks' duration. Provider requests MRI lumbar spine without contrast to further evaluate. (No documentation of physical therapy, medication trial, or other conservative management provided in this submission.) ADDITIONAL DOCUMENTATION PROVIDED BY PROVIDER: SYNTHETIC SUPPLEMENT: Patient MEM-77102934 completed six weeks of supervised physical therapy twice weekly and NSAID medication from 08/01/2026 to 09/12/2026. Persistent radiculopathy despite this treatment. No neurological deficit or red flags. Diagnosis M54.5 and request 72148 unchanged.",
+  "urgency": "routine",
+  "confidence_score": 0.85,
+  "extraction_notes": "Synthetic demo record. The original transcribed fax plus a provider supplement. The supplement names the same member ID (MEM-77102934) and the same diagnosis and procedure codes. The original note says no conservative-management documentation was provided; the supplement now documents 6 weeks of PT and NSAIDs (08/01/2026-09/12/2026), so the earlier statement is superseded, not contradicted. The supplement gives no patient name or DOB of its own. Confidence is a self-reported estimate, not measured accuracy."
+}

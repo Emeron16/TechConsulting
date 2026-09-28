@@ -1,0 +1,29 @@
+{
+  "patient_summary": "Synthetic demo patient MEM-53201984 (D. Okafor) in urgent care with acute dyspnea and pleuritic right chest pain since this morning, HR 118, SpO2 91% on room air, after a 6-hour flight 2 days ago. D-dimer is elevated at 2.1 ug/mL and the Wells score is 6 (high probability). There is no known contrast allergy and creatinine is 0.9.",
+  "request_summary": "Dr. Anthony Reyes, MD (Cedar Grove Urgent Care) requests STAT CT angiography of the chest (71275) to rule out pulmonary embolism, given high clinical suspicion and the risk of deterioration if diagnosis is delayed.",
+  "recommendation": "likely_approve",
+  "confidence": 0.88,
+  "met_criteria": [
+    "CTA-PE-001: Signs or symptoms consistent with acute PE. Dyspnea, pleuritic chest pain, tachycardia (118) and hypoxia (SpO2 91%) are documented.",
+    "CTA-PE-001: Elevated D-dimer or high pretest probability. D-dimer is 2.1 ug/mL (reference <0.5) and the Wells score is 6.",
+    "CTA-PE-001: Time-sensitive / STAT request. The request is marked STAT with acute symptoms in urgent care, which requires urgent escalation.",
+    "CTA-PE-001: No contraindication to IV contrast. No known contrast allergy, and renal function is normal (creatinine 0.9)."
+  ],
+  "unmet_criteria": [],
+  "reviewer_focus_areas": [
+    "STAT: escalate for immediate human review. Policy says urgent escalation applies regardless of documentation completeness.",
+    "Confirm the member identity. The stated age (56) does not match the DOB (06/17/1968, about 58). This should not delay urgent review."
+  ],
+  "citations": [
+    "CTA-PE-001: Signs or symptoms consistent with acute PE (dyspnea, pleuritic chest pain, tachycardia, hypoxia) are documented.",
+    "CTA-PE-001: An elevated D-dimer, high pretest probability (e.g., Wells score), or equivalent clinical decision rule supports imaging.",
+    "CTA-PE-001: This is a time-sensitive / STAT request given the risk of missed or delayed PE diagnosis; it should be escalated for urgent review regardless of documentation completeness on other criteria.",
+    "CTA-PE-001: No contraindication to IV contrast (e.g., unaddressed severe contrast allergy, acute kidney injury without a mitigation plan) is documented."
+  ],
+  "risk_flags": [
+    "Time-critical: a delay risks missed PE diagnosis.",
+    "Minor data inconsistency: the stated age differs from the DOB-derived age."
+  ],
+  "estimated_review_minutes": 5,
+  "rationale": "Every criterion is documented, with objective findings (vitals, D-dimer, Wells score) and no contrast contraindication. The request is STAT, so it needs immediate human review. The final call belongs to the reviewer or routing step, not this analysis. Confidence is a self-reported estimate, not measured accuracy. SYNTHETIC DEMO."
+}

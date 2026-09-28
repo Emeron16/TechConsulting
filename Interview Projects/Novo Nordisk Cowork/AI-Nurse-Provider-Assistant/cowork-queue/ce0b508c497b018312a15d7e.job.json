@@ -1,0 +1,106 @@
+{
+  "job_id": "ce0b508c497b018312a15d7e",
+  "status": "completed",
+  "created_at": 1790354569.5833652,
+  "synthetic_demo_only": true,
+  "format": "PolicyAnalysis",
+  "schema": {
+    "description": "Component 3 (Policy RAG) + Component 5 (Nurse Dashboard) combined: the model produces\na structured analysis AND the nurse-facing summaries in one call, since both draw on the\nsame read of the record. The AI never outputs a final approve/deny decision here.",
+    "properties": {
+      "patient_summary": {
+        "description": "2-3 sentence patient context: diagnosis, history",
+        "title": "Patient Summary",
+        "type": "string"
+      },
+      "request_summary": {
+        "description": "What is being requested, why, and by whom",
+        "title": "Request Summary",
+        "type": "string"
+      },
+      "recommendation": {
+        "enum": [
+          "likely_approve",
+          "needs_review",
+          "likely_deny"
+        ],
+        "title": "Recommendation",
+        "type": "string"
+      },
+      "confidence": {
+        "description": "Confidence in the recommendation, from 0.0 to 1.0",
+        "title": "Confidence",
+        "type": "number"
+      },
+      "met_criteria": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Met Criteria",
+        "type": "array"
+      },
+      "unmet_criteria": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Unmet Criteria",
+        "type": "array"
+      },
+      "reviewer_focus_areas": {
+        "description": "Specific questions the nurse should answer",
+        "items": {
+          "type": "string"
+        },
+        "title": "Reviewer Focus Areas",
+        "type": "array"
+      },
+      "citations": {
+        "description": "Policy IDs / criterion text referenced",
+        "items": {
+          "type": "string"
+        },
+        "title": "Citations",
+        "type": "array"
+      },
+      "risk_flags": {
+        "description": "Fraud indicators, contradictions, regulatory concerns",
+        "items": {
+          "type": "string"
+        },
+        "title": "Risk Flags",
+        "type": "array"
+      },
+      "estimated_review_minutes": {
+        "description": "Realistic nurse review time in minutes, from 1 to 60",
+        "title": "Estimated Review Minutes",
+        "type": "integer"
+      },
+      "rationale": {
+        "description": "Brief explanation supporting the recommendation",
+        "title": "Rationale",
+        "type": "string"
+      }
+    },
+    "required": [
+      "patient_summary",
+      "request_summary",
+      "recommendation",
+      "confidence",
+      "estimated_review_minutes",
+      "rationale"
+    ],
+    "title": "PolicyAnalysis",
+    "type": "object"
+  },
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are the clinical policy analysis agent in a prior-authorization pipeline. You provide STRUCTURED ANALYSIS ONLY \u2014 you never issue a final approval or denial. A human nurse reviewer always makes the final call (except for a small set of pre-approved low-risk auto-approval cases, which is decided outside of you by a separate routing step).\n\nYou will be given the extracted request data and the applicable policy's criteria (with a policy ID for citation). Determine:\n- Which specific criteria are clearly met by the documentation, and which are unmet or unclear.\n- A recommendation: \"likely_approve\" (criteria clearly met), \"needs_review\" (mixed/ambiguous or minor gaps), or \"likely_deny\" (criteria clearly not met and no red flags requiring urgent override).\n- A confidence score (0-1) in that recommendation.\n- reviewer_focus_areas: the specific questions a nurse should answer to finalize the decision.\n- citations: reference the policy_id and the specific criterion text you relied on.\n- risk_flags: anything suggesting fraud, internal contradiction, or a regulatory concern \u2014 leave empty if none.\n- estimated_review_minutes: a realistic nurse review time (5-8 min for clear-cut cases, up to 20-30 for complex ones), reflecting how much independent judgment is really required.\n- patient_summary and request_summary: concise, factual, written for a nurse skimming a queue.\n\nBe conservative: never claim a criterion is met unless the documentation actually supports it.\n"
+    },
+    {
+      "role": "user",
+      "content": "Extracted request:\n- Patient ID: MEM-53201984\n- Diagnosis codes: R06.02, R00.0\n- Procedure codes: 71275\n- Requesting provider: Dr. Anthony Reyes, MD \u2014 Cedar Grove Urgent Care\n- Urgency: stat\n- Clinical notes: 56-year-old presents to urgent care with acute-onset dyspnea and pleuritic right-sided chest pain starting this morning, heart rate 118 bpm, SpO2 91% on room air. Recent 6-hour flight two days ago. D-dimer elevated at 2.1 ug/mL (reference <0.5). Wells score calculated at 6 (high probability for PE). No known contrast allergy. Renal function normal (creatinine 0.9). Provider is requesting STAT CT angiography of the chest to rule out pulmonary embolism given high clinical suspicion and risk of clinical deterioration if diagnosis is delayed.\n\nApplicable policy: CTA-PE-001 \u2014 CT Angiography, Chest, for Suspected Pulmonary Embolism (source: CMS Local Coverage Determination style criteria (synthetic))\nCriteria:\n- Signs or symptoms consistent with acute PE (dyspnea, pleuritic chest pain, tachycardia, hypoxia) are documented.\n- An elevated D-dimer, high pretest probability (e.g., Wells score), or equivalent clinical decision rule supports imaging.\n- This is a time-sensitive / STAT request given the risk of missed or delayed PE diagnosis; it should be escalated for urgent review regardless of documentation completeness on other criteria.\n- No contraindication to IV contrast (e.g., unaddressed severe contrast allergy, acute kidney injury without a mitigation plan) is documented."
+    }
+  ],
+  "started_at": 1790354569.8909178,
+  "finished_at": 1790354582.7290268
+}

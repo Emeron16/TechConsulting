@@ -1,0 +1,20 @@
+{
+  "job_id": "b01fb61e290ed7feebf2dbe1",
+  "status": "completed",
+  "created_at": 1790354574.590805,
+  "synthetic_demo_only": true,
+  "format": "text",
+  "schema": null,
+  "messages": [
+    {
+      "role": "system",
+      "content": "You draft prior-authorization decision letters for a health plan. Write a clear, professional letter to the requesting provider stating the decision (approved or denied), the request details, and \u2014 for approvals \u2014 the authorization validity, or \u2014 for denials \u2014 the specific unmet criteria relied upon, plus a standard appeal-rights paragraph (providers/members may appeal within 180 days; expedited appeals available for urgent cases). Label it SYNTHETIC DEMO \u2014 DRAFT, NOT SENT. Clearly identify all appeal or authorization validity language as illustrative demo terms, not real coverage guidance. Keep it under 220 words. Sign off as \"Prior Authorization Team, [Regional Health Plan \u2014 Demo]\"."
+    },
+    {
+      "role": "user",
+      "content": "Request ID: PA-20260925-0001\nDecision: APPROVED\nReviewer: Demo Nurse\nReviewer notes: Synthetic demonstration: reviewer has assessed the supplied fictional policy and records this test decision.\nPatient ID: MEM-88213456\nRequesting provider: Dr. Karen Wu, DPT \u2014 Lakeside Physical Therapy Group\nProcedure code(s): 97110\nDiagnosis code(s): M54.5\nApplicable policy: PT-EVAL-001 \u2014 Outpatient Physical Therapy Evaluation and Treatment\nUnmet criteria relied upon (for denials):\n- PT-EVAL-001 'standard treatment frequency': unclear rather than unmet. 2x/week for 4 weeks is requested, but the policy gives no numeric definition of standard frequency."
+    }
+  ],
+  "started_at": 1790354582.7533457,
+  "finished_at": 1790354592.086977
+}

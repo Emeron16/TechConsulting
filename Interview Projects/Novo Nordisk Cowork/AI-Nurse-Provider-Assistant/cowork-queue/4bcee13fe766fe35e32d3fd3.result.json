@@ -1,0 +1,16 @@
+{
+  "patient_id": "SYN-PT-2026-03",
+  "date_of_birth": "1990-06-18",
+  "diagnosis_codes": [
+    "M54.5"
+  ],
+  "procedure_codes": [
+    "97161"
+  ],
+  "requesting_provider": "Dr. Taylor Vale, Example Rehab Clinic (fictional)",
+  "ordering_npi": "",
+  "clinical_notes": "Referred by Dr. Taylor Vale for assessment of difficulty bending and prolonged sitting associated with mechanical low back pain. One initial evaluation visit is requested. No treatment course is requested at this time. No acute neurological deficit, suspected fracture, or other red-flag symptoms are reported in this fictional case.",
+  "urgency": "routine",
+  "confidence_score": 0.85,
+  "extraction_notes": "Synthetic demo record (case reference DEMO-FRESH-PT; patient name Casey Brooks, fictional). The text is clear and all required fields are present. No ordering NPI appears, so it is left empty. The document labels M54.5 a 'demo source code'; it was recorded verbatim. The referring clinician is the same as the requesting provider, and no credentials are stated. Confidence is a self-reported estimate, not measured accuracy."
+}

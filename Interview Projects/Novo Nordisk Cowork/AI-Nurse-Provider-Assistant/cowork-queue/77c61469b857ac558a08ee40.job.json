@@ -1,0 +1,97 @@
+{
+  "job_id": "77c61469b857ac558a08ee40",
+  "status": "completed",
+  "created_at": 1790448169.024142,
+  "synthetic_demo_only": true,
+  "format": "ExtractedRequest",
+  "schema": {
+    "description": "Structured fields pulled from the raw intake document (Component 1: Intelligent\nDocument Intake). Diagnosis/procedure codes must be taken verbatim, never inferred.",
+    "properties": {
+      "patient_id": {
+        "description": "Patient identifier as it appears in the document",
+        "title": "Patient Id",
+        "type": "string"
+      },
+      "date_of_birth": {
+        "description": "Patient date of birth, as written in the document",
+        "title": "Date Of Birth",
+        "type": "string"
+      },
+      "diagnosis_codes": {
+        "description": "ICD-10 codes exactly as they appear, never inferred",
+        "items": {
+          "type": "string"
+        },
+        "title": "Diagnosis Codes",
+        "type": "array"
+      },
+      "procedure_codes": {
+        "description": "CPT/HCPCS codes exactly as they appear in the request",
+        "items": {
+          "type": "string"
+        },
+        "title": "Procedure Codes",
+        "type": "array"
+      },
+      "requesting_provider": {
+        "description": "Name of the requesting/treating provider",
+        "title": "Requesting Provider",
+        "type": "string"
+      },
+      "ordering_npi": {
+        "default": "",
+        "description": "Ordering provider NPI, if present",
+        "title": "Ordering Npi",
+        "type": "string"
+      },
+      "clinical_notes": {
+        "description": "Verbatim relevant clinical narrative preserved from the document",
+        "title": "Clinical Notes",
+        "type": "string"
+      },
+      "urgency": {
+        "description": "routine / urgent / stat, inferred from clinical context",
+        "enum": [
+          "routine",
+          "urgent",
+          "stat"
+        ],
+        "title": "Urgency",
+        "type": "string"
+      },
+      "confidence_score": {
+        "description": "Extraction confidence (document/OCR clarity), as a number from 0.0 to 1.0",
+        "title": "Confidence Score",
+        "type": "number"
+      },
+      "extraction_notes": {
+        "default": "",
+        "description": "Anything ambiguous or low-confidence about this extraction",
+        "title": "Extraction Notes",
+        "type": "string"
+      }
+    },
+    "required": [
+      "patient_id",
+      "date_of_birth",
+      "requesting_provider",
+      "clinical_notes",
+      "urgency",
+      "confidence_score"
+    ],
+    "title": "ExtractedRequest",
+    "type": "object"
+  },
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are the document-intake extraction agent in a prior-authorization pipeline for a regional health plan. You will be given the raw text of a prior authorization request (from a fax, PDF, portal submission, or provider upload).\n\nExtract the structured fields exactly as specified. Rules:\n- Diagnosis codes (ICD-10) and procedure codes (CPT/HCPCS) must be taken VERBATIM from the text. Never infer or guess a code that is not explicitly written down. If none are present, return an empty list for that field.\n- Preserve the clinically relevant narrative verbatim in clinical_notes (you may trim obvious boilerplate/header noise, but do not paraphrase clinical content).\n- urgency must reflect what the document actually says or clearly implies (e.g. \"STAT\", \"urgent\", explicit time pressure) \u2014 default to \"routine\" if nothing indicates otherwise.\n- confidence_score reflects how clearly and unambiguously the document text supports this extraction (document/OCR clarity), NOT your opinion of the clinical case. Use lower scores if text is garbled, fields are ambiguous, or required fields are simply absent.\n- Use extraction_notes to flag anything ambiguous, contradictory, or low-confidence.\n"
+    },
+    {
+      "role": "user",
+      "content": "Raw intake document text:\n\nPrior Authorization Request\nSYNTHETIC DEMO DOCUMENT - NOT FOR CLINICAL USE\nSubmitted via Provider Web Portal\nPatient Name: Morgan Reed (synthetic demo patient)\nRequesting Provider: Dr. Avery Chen - Example Spine Clinic\nOrdering NPI: 1928374650\nDiagnosis Code(s): M54.5 (Low back pain)\nProcedure Code(s) Requested: 72148 (MRI lumbar spine without contrast)\nUrgency: Routine\nClinical Notes\nPatient reports 8 weeks of pain in the lower back with intermittent radiculopathy into the left leg.\nSymptoms interfere with sitting and work. The current examination documents stable gait and no\nprogressive neurological deficit. No bowel or bladder changes, fever, recent trauma, or history of\nmalignancy are reported. No implanted device or other MRI contraindication is documented.\nThe clinician requests MRI lumbar spine without contrast to further evaluate persistent symptoms. This\nsubmission includes only the current visit note.\nFictional patient, provider, and identifiers. Interview demonstration only. 1"
+    }
+  ],
+  "started_at": 1790448169.173085,
+  "finished_at": 1790448175.7983255
+}

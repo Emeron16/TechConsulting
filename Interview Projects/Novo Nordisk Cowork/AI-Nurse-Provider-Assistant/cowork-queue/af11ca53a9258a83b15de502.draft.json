@@ -1,0 +1,16 @@
+{
+  "patient_id": "MEM-88213456",
+  "date_of_birth": "04/12/1979",
+  "diagnosis_codes": [
+    "M54.5"
+  ],
+  "procedure_codes": [
+    "97110"
+  ],
+  "requesting_provider": "Dr. Karen Wu, DPT - Lakeside Physical Therapy Group",
+  "ordering_npi": "1928374650",
+  "clinical_notes": "Patient is a 46-year-old referred by PCP Dr. Sandra Lee for outpatient physical therapy evaluation and treatment of mechanical low back pain. Patient reports 3 weeks of dull low back pain with difficulty bending and prolonged sitting, rating pain 4/10. No radiation to legs, no numbness or weakness, no bowel/bladder changes, no history of trauma or malignancy. Requesting initial evaluation plus standard course of therapeutic exercise, 2x/week for 4 weeks (8 visits total). No red-flag symptoms present on review of systems. Requested visits: 1 evaluation + 8 treatment visits.",
+  "urgency": "routine",
+  "confidence_score": 0.9,
+  "extraction_notes": "Synthetic demo PDF upload; the text is clean and every required field is explicit. The notes request an initial evaluation, but only 97110 is written as a procedure code, and no evaluation code was added. Confidence is a self-reported estimate of document clarity, not measured accuracy."
+}

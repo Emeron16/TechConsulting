@@ -1,0 +1,17 @@
+{
+  "patient_id": "MEM-65590212",
+  "date_of_birth": "01/30/1990",
+  "diagnosis_codes": [
+    "S83.241A",
+    "M25.561"
+  ],
+  "procedure_codes": [
+    "29881"
+  ],
+  "requesting_provider": "Dr. Elena Petrov, MD — Riverside Orthopedic Associates",
+  "ordering_npi": "1620394857",
+  "clinical_notes": "32-year-old with right knee pain and intermittent mechanical locking for the past 8 weeks following a twisting injury while playing recreational soccer. MRI right knee (reviewed 6/2/2026) showed a medial meniscus tear consistent with symptoms. Patient completed a 5-week course of physical therapy and NSAIDs with only partial improvement; mechanical locking persists and is now affecting activities of daily living. Physical exam notes joint line tenderness and positive McMurray test. No prior knee surgery. No absolute contraindications to surgery documented. Note: exact date physical therapy was completed is not specified in this submission (referenced generally as \"5-week course\" without start/end dates).",
+  "urgency": "routine",
+  "confidence_score": 0.8,
+  "extraction_notes": "Synthetic demo record. The text is clean and the required fields are present. Contradiction: the notes say '32-year-old', but DOB 01/30/1990 implies about age 36 in 2026. Both are recorded as written; neither was corrected. The PT course has no start or end dates. Confidence is a self-reported estimate, not measured accuracy."
+}

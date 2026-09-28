@@ -1,0 +1,32 @@
+{
+  "patient_summary": "Synthetic demo patient DEMO-BC-2002 (Taylor Brooks) with obesity, unspecified (E66.9), and a current BMI of 32.0. Type 2 diabetes, hypertension and OSA are documented as absent, with no substance use or bleeding disorder.",
+  "request_summary": "Dr. Jordan Ellis (Example Surgical Clinic) requests a routine laparoscopic Roux-en-Y gastric bypass (43644) after limited weight loss from self-directed dieting.",
+  "recommendation": "likely_deny",
+  "confidence": 0.85,
+  "met_criteria": [
+    "BARIATRIC-001 contraindications: none documented; no active substance use disorder or unmanaged bleeding disorder."
+  ],
+  "unmet_criteria": [
+    "BARIATRIC-001 BMI: documented as not met. BMI 32.0 is below 35, and the record states there is no qualifying comorbidity.",
+    "BARIATRIC-001 supervised program: documented as not met. The program began two weeks ago and is not complete, with no completed program in 2 years.",
+    "BARIATRIC-001 psychological clearance: documented as not met. The completed evaluation states the patient is not yet cleared.",
+    "BARIATRIC-001 prior attempts insufficient: unclear. Only limited self-directed dieting is described while the supervised program is in progress."
+  ],
+  "reviewer_focus_areas": [
+    "Confirm that the BMI of 32.0 and the absence of comorbidities are current.",
+    "With the program and readiness assessment still in progress, would a pend or withdrawal fit better than an adverse determination?",
+    "The unmet criteria are affirmatively documented; this is not a missing-documentation case."
+  ],
+  "citations": [
+    "BARIATRIC-001: BMI >= 40, OR BMI >= 35 with at least one qualifying comorbidity (e.g., type 2 diabetes, hypertension, obstructive sleep apnea).",
+    "BARIATRIC-001: Completion of a physician-supervised weight management program (nutrition counseling, documented attempts at weight loss) within the past 2 years.",
+    "BARIATRIC-001: A psychological evaluation has cleared the patient for surgery, with no untreated eating disorder or unmanaged severe psychiatric illness noted.",
+    "BARIATRIC-001: Prior non-surgical weight-loss attempts have been insufficient to achieve or maintain a healthy weight given the patient's comorbidities.",
+    "BARIATRIC-001: No absolute contraindication to bariatric surgery (e.g., active substance use disorder, unmanaged bleeding disorder) documented."
+  ],
+  "risk_flags": [
+    "Ordering NPI 1928374650 also appears on other demo requests from different providers. Verify the NPI."
+  ],
+  "estimated_review_minutes": 10,
+  "rationale": "Three of five criteria are documented as not met: BMI below threshold with no comorbidity, supervised program incomplete, and no psychological clearance. This is recorded evidence, not missing documentation. The recommendation is analysis only; the nurse decides. Confidence is a self-reported estimate, not measured accuracy. SYNTHETIC DEMO."
+}

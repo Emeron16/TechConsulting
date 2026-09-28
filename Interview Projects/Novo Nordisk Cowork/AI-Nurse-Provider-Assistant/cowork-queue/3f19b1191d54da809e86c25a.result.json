@@ -1,0 +1,30 @@
+{
+  "patient_summary": "Synthetic demo patient MEM-65590212 (T. Boateng) with a right medial meniscus tear (S83.241A) and right knee pain (M25.561). There are 8 weeks of pain and intermittent mechanical locking after a soccer twisting injury. MRI reviewed 6/2/2026 confirmed the tear, the exam shows joint line tenderness and a positive McMurray test, and there is no prior knee surgery.",
+  "request_summary": "Dr. Elena Petrov, MD (Riverside Orthopedic Associates) requests routine right knee arthroscopy with meniscectomy (29881) for persistent mechanical locking despite PT and NSAIDs.",
+  "recommendation": "likely_approve",
+  "confidence": 0.85,
+  "met_criteria": [
+    "KNEE-ARTHRO-001: Imaging confirms a meniscal tear consistent with symptoms. The MRI (reviewed 6/2/2026) showed a medial meniscus tear consistent with symptoms.",
+    "KNEE-ARTHRO-001: A conservative trial of 4-6 weeks was attempted and failed, OR mechanical locking is documented. Both are documented: a 5-week PT and NSAID course with only partial improvement, and persistent mechanical locking.",
+    "KNEE-ARTHRO-001: Symptoms functionally limit the patient. Locking is documented as affecting activities of daily living.",
+    "KNEE-ARTHRO-001: No absolute surgical contraindication documented. The note states none is documented."
+  ],
+  "unmet_criteria": [],
+  "reviewer_focus_areas": [
+    "The PT course has no start or end dates. Is the documented locking alone enough under the policy's 'OR mechanical locking' clause, or are PT dates needed?",
+    "Resolve the age inconsistency: the notes say 32, but DOB 01/30/1990 implies about 36. Confirm this is the right member.",
+    "Confirm that the MRI date (6/2/2026) fits the stated 8-week symptom timeline."
+  ],
+  "citations": [
+    "KNEE-ARTHRO-001: Imaging (MRI preferred) confirms a meniscal tear or structural abnormality consistent with the patient's symptoms.",
+    "KNEE-ARTHRO-001: A conservative treatment trial (physical therapy, NSAIDs, activity modification, and/or corticosteroid injection) of at least 4-6 weeks has been attempted and failed, OR mechanical locking/instability is documented.",
+    "KNEE-ARTHRO-001: Symptoms (pain, swelling, mechanical locking, or instability) are significant enough to functionally limit the patient.",
+    "KNEE-ARTHRO-001: No absolute surgical contraindication documented in the record."
+  ],
+  "risk_flags": [
+    "Internal inconsistency: the stated age (32) does not match the DOB (01/30/1990, about 36 in 2026). Identity or data-entry check recommended.",
+    "Timeline check: the symptoms are described as 8 weeks, while the MRI was reviewed 6/2/2026. Whether that fits depends on the submission date, which is not given."
+  ],
+  "estimated_review_minutes": 10,
+  "rationale": "Every criterion has documentary support, including the locking clause, which applies regardless of the exact PT dates. The age/DOB contradiction and the timeline question are data-quality issues a nurse should resolve before finalizing. Confidence is a self-reported estimate, not measured accuracy. SYNTHETIC DEMO."
+}

@@ -1,0 +1,20 @@
+{
+  "job_id": "78174c0afdc193a361e8d2e4",
+  "status": "completed",
+  "created_at": 1790354592.694737,
+  "synthetic_demo_only": true,
+  "format": "text",
+  "schema": null,
+  "messages": [
+    {
+      "role": "system",
+      "content": "You draft missing-information letters for a health plan's prior authorization team. Write a short, clear, professional letter to the requesting provider's office. For each missing item, state exactly what is needed and reference why (the clinical criterion or documentation requirement). Do not invent additional requirements beyond what you're given. Label it SYNTHETIC DEMO \u2014 DRAFT, NOT SENT. Keep it under 200 words. Sign off as \"Prior Authorization Team, [Regional Health Plan \u2014 Demo]\"."
+    },
+    {
+      "role": "user",
+      "content": "Request ID: PA-20260925-0002\nPatient ID: MEM-77102934\nRequesting provider: Dr. Michael Ortiz, MD \u2014 Summit Family Medicine\nProcedure code(s): 72148\n\nMissing items:\n- Additional information requested by nurse: Synthetic demonstration: additional conservative treatment documentation is required."
+    }
+  ],
+  "started_at": 1790354593.1274302,
+  "finished_at": 1790354600.784962
+}

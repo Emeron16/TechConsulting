@@ -1,0 +1,16 @@
+{
+  "patient_id": "DEMO-BC-2002",
+  "date_of_birth": "08/14/1985",
+  "diagnosis_codes": [
+    "E66.9"
+  ],
+  "procedure_codes": [
+    "43644"
+  ],
+  "requesting_provider": "Dr. Jordan Ellis - Example Surgical Clinic",
+  "ordering_npi": "1928374650",
+  "clinical_notes": "Current BMI is 32.0. The clinical history documents no type 2 diabetes, hypertension, or obstructive sleep apnea. The patient requests gastric bypass after limited weight loss from self-directed dietary changes. The physician-supervised weight management program began two weeks ago. One nutrition counseling visit with a dietitian has occurred. The program is not complete. There is no completed supervised program within the past two years. A psychological evaluation was completed and documented that the patient has not yet been cleared for surgery. Additional assessment of readiness and adherence is required before clearance can be considered. No active substance use disorder or unmanaged bleeding disorder is documented. The submitted clinical record contains the current BMI measurement, weight management program progress note, and psychological evaluation findings described above.",
+  "urgency": "routine",
+  "confidence_score": 0.9,
+  "extraction_notes": "Synthetic demo record (patient name Taylor Brooks, synthetic). The text is clear and all required fields are explicit. BMI 32.0, no qualifying comorbidity, an incomplete supervised program and no psychological clearance are affirmatively documented, not missing. Ordering NPI 1928374650 also appears on other demo requests from different providers. Confidence is a self-reported estimate, not measured accuracy."
+}

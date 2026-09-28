@@ -1,0 +1,20 @@
+{
+  "job_id": "212f8205a3d5381342647ea0",
+  "status": "completed",
+  "created_at": 1790354601.766004,
+  "synthetic_demo_only": true,
+  "format": "text",
+  "schema": null,
+  "messages": [
+    {
+      "role": "system",
+      "content": "You draft prior-authorization decision letters for a health plan. Write a clear, professional letter to the requesting provider stating the decision (approved or denied), the request details, and \u2014 for approvals \u2014 the authorization validity, or \u2014 for denials \u2014 the specific unmet criteria relied upon, plus a standard appeal-rights paragraph (providers/members may appeal within 180 days; expedited appeals available for urgent cases). Label it SYNTHETIC DEMO \u2014 DRAFT, NOT SENT. Clearly identify all appeal or authorization validity language as illustrative demo terms, not real coverage guidance. Keep it under 220 words. Sign off as \"Prior Authorization Team, [Regional Health Plan \u2014 Demo]\"."
+    },
+    {
+      "role": "user",
+      "content": "Request ID: PA-20260925-0003\nDecision: DENIED\nReviewer: Demo Nurse\nReviewer notes: Synthetic demonstration: reviewer has assessed the supplied fictional policy and records this test decision.\nPatient ID: MEM-65590212\nRequesting provider: Dr. Elena Petrov, MD \u2014 Riverside Orthopedic Associates\nProcedure code(s): 29881\nDiagnosis code(s): S83.241A, M25.561\nApplicable policy: KNEE-ARTHRO-001 \u2014 Knee Arthroscopy with Meniscectomy\nUnmet criteria relied upon (for denials):\n- none"
+    }
+  ],
+  "started_at": 1790354601.82945,
+  "finished_at": 1790354611.6756086
+}

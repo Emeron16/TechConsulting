@@ -1,0 +1,106 @@
+{
+  "job_id": "2cd8538b3ba8c3692aa80c88",
+  "status": "completed",
+  "created_at": 1790354962.107819,
+  "synthetic_demo_only": true,
+  "format": "PolicyAnalysis",
+  "schema": {
+    "description": "Component 3 (Policy RAG) + Component 5 (Nurse Dashboard) combined: the model produces\na structured analysis AND the nurse-facing summaries in one call, since both draw on the\nsame read of the record. The AI never outputs a final approve/deny decision here.",
+    "properties": {
+      "patient_summary": {
+        "description": "2-3 sentence patient context: diagnosis, history",
+        "title": "Patient Summary",
+        "type": "string"
+      },
+      "request_summary": {
+        "description": "What is being requested, why, and by whom",
+        "title": "Request Summary",
+        "type": "string"
+      },
+      "recommendation": {
+        "enum": [
+          "likely_approve",
+          "needs_review",
+          "likely_deny"
+        ],
+        "title": "Recommendation",
+        "type": "string"
+      },
+      "confidence": {
+        "description": "Confidence in the recommendation, from 0.0 to 1.0",
+        "title": "Confidence",
+        "type": "number"
+      },
+      "met_criteria": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Met Criteria",
+        "type": "array"
+      },
+      "unmet_criteria": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Unmet Criteria",
+        "type": "array"
+      },
+      "reviewer_focus_areas": {
+        "description": "Specific questions the nurse should answer",
+        "items": {
+          "type": "string"
+        },
+        "title": "Reviewer Focus Areas",
+        "type": "array"
+      },
+      "citations": {
+        "description": "Policy IDs / criterion text referenced",
+        "items": {
+          "type": "string"
+        },
+        "title": "Citations",
+        "type": "array"
+      },
+      "risk_flags": {
+        "description": "Fraud indicators, contradictions, regulatory concerns",
+        "items": {
+          "type": "string"
+        },
+        "title": "Risk Flags",
+        "type": "array"
+      },
+      "estimated_review_minutes": {
+        "description": "Realistic nurse review time in minutes, from 1 to 60",
+        "title": "Estimated Review Minutes",
+        "type": "integer"
+      },
+      "rationale": {
+        "description": "Brief explanation supporting the recommendation",
+        "title": "Rationale",
+        "type": "string"
+      }
+    },
+    "required": [
+      "patient_summary",
+      "request_summary",
+      "recommendation",
+      "confidence",
+      "estimated_review_minutes",
+      "rationale"
+    ],
+    "title": "PolicyAnalysis",
+    "type": "object"
+  },
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are the clinical policy analysis agent in a prior-authorization pipeline. You provide STRUCTURED ANALYSIS ONLY \u2014 you never issue a final approval or denial. A human nurse reviewer always makes the final call (except for a small set of pre-approved low-risk auto-approval cases, which is decided outside of you by a separate routing step).\n\nYou will be given the extracted request data and the applicable policy's criteria (with a policy ID for citation). Determine:\n- Which specific criteria are clearly met by the documentation, and which are unmet or unclear.\n- A recommendation: \"likely_approve\" (criteria clearly met), \"needs_review\" (mixed/ambiguous or minor gaps), or \"likely_deny\" (criteria clearly not met and no red flags requiring urgent override).\n- A confidence score (0-1) in that recommendation.\n- reviewer_focus_areas: the specific questions a nurse should answer to finalize the decision.\n- citations: reference the policy_id and the specific criterion text you relied on.\n- risk_flags: anything suggesting fraud, internal contradiction, or a regulatory concern \u2014 leave empty if none.\n- estimated_review_minutes: a realistic nurse review time (5-8 min for clear-cut cases, up to 20-30 for complex ones), reflecting how much independent judgment is really required.\n- patient_summary and request_summary: concise, factual, written for a nurse skimming a queue.\n\nBe conservative: never claim a criterion is met unless the documentation actually supports it.\n"
+    },
+    {
+      "role": "user",
+      "content": "Extracted request:\n- Patient ID: DEMO-BC-2002\n- Diagnosis codes: E66.9\n- Procedure codes: 43644\n- Requesting provider: Dr. Jordan Ellis - Example Surgical Clinic\n- Urgency: routine\n- Clinical notes: Current BMI is 32.0. The clinical history documents no type 2 diabetes, hypertension, or obstructive sleep apnea. The patient requests gastric bypass after limited weight loss from self-directed dietary changes. The physician-supervised weight management program began two weeks ago. One nutrition counseling visit with a dietitian has occurred. The program is not complete. There is no completed supervised program within the past two years. A psychological evaluation was completed and documented that the patient has not yet been cleared for surgery. Additional assessment of readiness and adherence is required before clearance can be considered. No active substance use disorder or unmanaged bleeding disorder is documented. The submitted clinical record contains the current BMI measurement, weight management program progress note, and psychological evaluation findings described above.\n\nApplicable policy: BARIATRIC-001 \u2014 Laparoscopic Roux-en-Y Gastric Bypass (source: CMS National Coverage Determination style criteria (synthetic) + Plan Medical Policy)\nCriteria:\n- BMI >= 40, OR BMI >= 35 with at least one qualifying comorbidity (e.g., type 2 diabetes, hypertension, obstructive sleep apnea).\n- Completion of a physician-supervised weight management program (nutrition counseling, documented attempts at weight loss) within the past 2 years.\n- A psychological evaluation has cleared the patient for surgery, with no untreated eating disorder or unmanaged severe psychiatric illness noted.\n- Prior non-surgical weight-loss attempts have been insufficient to achieve or maintain a healthy weight given the patient's comorbidities.\n- No absolute contraindication to bariatric surgery (e.g., active substance use disorder, unmanaged bleeding disorder) documented."
+    }
+  ],
+  "started_at": 1790354962.2663982,
+  "finished_at": 1790354977.0739336
+}

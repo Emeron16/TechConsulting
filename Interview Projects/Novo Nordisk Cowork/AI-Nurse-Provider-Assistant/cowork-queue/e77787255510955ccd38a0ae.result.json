@@ -1,0 +1,30 @@
+{
+  "patient_summary": "Synthetic demo patient MEM-88213456 (J. Alvarez), 46, with 3 weeks of mechanical low back pain (M54.5), pain 4/10, and difficulty bending and sitting for long periods. There is no radiation, numbness, weakness, bowel/bladder change, trauma or malignancy history.",
+  "request_summary": "Dr. Karen Wu, DPT (Lakeside Physical Therapy Group), on referral from PCP Dr. Sandra Lee, requests 1 PT evaluation plus 8 therapeutic-exercise visits (97110), 2x/week for 4 weeks.",
+  "recommendation": "needs_review",
+  "confidence": 0.75,
+  "met_criteria": [
+    "PT-EVAL-001 referral: the notes document a PCP referral (Dr. Sandra Lee) for PT evaluation and treatment.",
+    "PT-EVAL-001 functional limitation: difficulty bending and sitting for long periods, pain 4/10, related to low back pain.",
+    "PT-EVAL-001 evaluation visits: 1 evaluation requested, within the limit of 3.",
+    "PT-EVAL-001 red flags: none present; the review of systems is negative."
+  ],
+  "unmet_criteria": [
+    "PT-EVAL-001 'standard treatment frequency' is unclear, not unmet. The request is 2x/week for 4 weeks, but the policy does not define a numeric standard."
+  ],
+  "reviewer_focus_areas": [
+    "Is 2x/week for 4 weeks (8 visits) the plan's standard frequency under PT-EVAL-001?",
+    "The notes request an evaluation but only 97110 is coded. Does an evaluation code need to be added?"
+  ],
+  "citations": [
+    "PT-EVAL-001: A qualified provider has referred the patient for physical therapy evaluation and/or treatment.",
+    "PT-EVAL-001: The clinical notes describe a functional limitation (pain, weakness, reduced range of motion, or difficulty with activities of daily living) related to the diagnosis.",
+    "PT-EVAL-001: No more than 3 initial evaluation visits and standard treatment frequency are being requested (higher frequency/duration requests route to standard review).",
+    "PT-EVAL-001: No red flags requiring urgent escalation (e.g., acute neurological deficit, suspected fracture) are present."
+  ],
+  "risk_flags": [
+    "Minor inconsistency: an evaluation visit is requested but no evaluation procedure code is listed."
+  ],
+  "estimated_review_minutes": 6,
+  "rationale": "Referral, functional limitation, evaluation count and absence of red flags are all documented. The one judgment left is whether the requested frequency is 'standard', which the policy does not quantify, so a nurse should confirm it. Confidence is a self-reported estimate, not measured accuracy. SYNTHETIC DEMO."
+}

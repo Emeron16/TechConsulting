@@ -1,0 +1,16 @@
+{
+  "patient_id": "MEM-77102934",
+  "date_of_birth": "09/23/1985",
+  "diagnosis_codes": [
+    "M54.5"
+  ],
+  "procedure_codes": [
+    "72148"
+  ],
+  "requesting_provider": "Dr. Michael Ortiz, MD — Summit Family Medicine",
+  "ordering_npi": "1745829301",
+  "clinical_notes": "Patient presents with 7 weeks of radiculopathy symptoms: low back pain radiating into the left buttock and posterior thigh, worsening over the past 2 weeks. No bowel or bladder dysfunction. No fever, no unexplained weight loss, no history of cancer. No trauma. Patient is requesting imaging to evaluate for structural cause given persistent radiculopathy of 7 weeks' duration. Provider requests MRI lumbar spine without contrast to further evaluate. (No documentation of physical therapy, medication trial, or other conservative management provided in this submission.)",
+  "urgency": "routine",
+  "confidence_score": 0.85,
+  "extraction_notes": "Synthetic demo record. The source is a transcribed fax scan; the transcription reads cleanly and all required fields are explicit, but a transcription step introduces some risk of error. The submission itself notes that no conservative-management documentation was provided; that absence is recorded, not inferred. Confidence is a self-reported estimate, not measured accuracy."
+}

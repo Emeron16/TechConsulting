@@ -1,0 +1,28 @@
+{
+  "patient_summary": "Synthetic demo patient SYN-PT-2026-03 (Casey Brooks, fictional) with mechanical low back pain (M54.5) causing difficulty bending and with prolonged sitting. No acute neurological deficit, suspected fracture or other red flags are reported.",
+  "request_summary": "Dr. Taylor Vale (Example Rehab Clinic, fictional) requests a single outpatient PT evaluation (97161) and no treatment course. The referral is from the same clinician.",
+  "recommendation": "likely_approve",
+  "confidence": 0.85,
+  "met_criteria": [
+    "PT-EVAL-001: The notes document a referral for PT assessment by Dr. Taylor Vale.",
+    "PT-EVAL-001: A functional limitation is documented: difficulty bending and with prolonged sitting related to low back pain.",
+    "PT-EVAL-001: No more than 3 evaluation visits. One evaluation is requested with no treatment course, so frequency is not at issue.",
+    "PT-EVAL-001: No red flags. Acute neurological deficit, suspected fracture and other red flags are reported absent."
+  ],
+  "unmet_criteria": [],
+  "reviewer_focus_areas": [
+    "'Qualified provider': the referring and requesting clinician are the same person, and no credentials or specialty are stated. Confirm that this satisfies the referral criterion.",
+    "No ordering NPI is on the request. Confirm the provider at intake."
+  ],
+  "citations": [
+    "PT-EVAL-001: A qualified provider has referred the patient for physical therapy evaluation and/or treatment.",
+    "PT-EVAL-001: The clinical notes describe a functional limitation (pain, weakness, reduced range of motion, or difficulty with activities of daily living) related to the diagnosis.",
+    "PT-EVAL-001: No more than 3 initial evaluation visits and standard treatment frequency are being requested (higher frequency/duration requests route to standard review).",
+    "PT-EVAL-001: No red flags requiring urgent escalation (e.g., acute neurological deficit, suspected fracture) are present."
+  ],
+  "risk_flags": [
+    "Self-referral with no stated credentials and no NPI. This is likely benign in a demo but is worth a quick check."
+  ],
+  "estimated_review_minutes": 5,
+  "rationale": "Every criterion has documentary support for a single evaluation visit. Remaining uncertainty is limited to whether an uncredentialed self-referral counts as 'qualified', which is why confidence is 0.85 rather than higher. Confidence is a self-reported estimate, not measured accuracy. SYNTHETIC DEMO."
+}

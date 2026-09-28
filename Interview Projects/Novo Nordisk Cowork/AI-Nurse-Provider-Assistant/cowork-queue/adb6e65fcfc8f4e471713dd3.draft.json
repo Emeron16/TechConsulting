@@ -1,0 +1,31 @@
+{
+  "patient_summary": "Synthetic demo patient J. Alvarez, 46, with 3 weeks of mechanical low back pain (M54.5). The pain is dull, rated 4/10, and makes bending and prolonged sitting difficult. Radiation, numbness, weakness, bowel/bladder change, trauma and malignancy history are all documented as absent.",
+  "request_summary": "Dr. Karen Wu, DPT (Lakeside Physical Therapy Group) requests outpatient PT: 1 evaluation plus 8 therapeutic-exercise visits (97110) at 2x/week for 4 weeks. The patient was referred by PCP Dr. Sandra Lee.",
+  "recommendation": "needs_review",
+  "confidence": 0.72,
+  "met_criteria": [
+    "PT-EVAL-001: A qualified provider has referred the patient. The notes document a referral by PCP Dr. Sandra Lee for PT evaluation and treatment.",
+    "PT-EVAL-001: A functional limitation is documented. The notes describe difficulty bending and with prolonged sitting, with pain 4/10, related to low back pain.",
+    "PT-EVAL-001: No red flags requiring urgent escalation. The review of systems is negative, with no neurological deficit and no trauma or malignancy history.",
+    "PT-EVAL-001: No more than 3 initial evaluation visits. Only 1 evaluation is requested."
+  ],
+  "unmet_criteria": [
+    "PT-EVAL-001 'standard treatment frequency': unclear rather than unmet. 2x/week for 4 weeks is requested, but the policy gives no numeric definition of standard frequency."
+  ],
+  "reviewer_focus_areas": [
+    "Does 2x/week for 4 weeks (8 visits) count as the plan's standard treatment frequency under PT-EVAL-001?",
+    "The notes request an initial evaluation, but only 97110 is listed. Should an evaluation code (97161-97163) be added to the request?",
+    "Confirm the ordering NPI belongs to the requesting provider."
+  ],
+  "citations": [
+    "PT-EVAL-001: A qualified provider has referred the patient for physical therapy evaluation and/or treatment.",
+    "PT-EVAL-001: The clinical notes describe a functional limitation (pain, weakness, reduced range of motion, or difficulty with activities of daily living) related to the diagnosis.",
+    "PT-EVAL-001: No more than 3 initial evaluation visits and standard treatment frequency are being requested (higher frequency/duration requests route to standard review).",
+    "PT-EVAL-001: No red flags requiring urgent escalation (e.g., acute neurological deficit, suspected fracture) are present."
+  ],
+  "risk_flags": [
+    "Minor internal inconsistency: an evaluation visit is requested but no evaluation procedure code is listed."
+  ],
+  "estimated_review_minutes": 7,
+  "rationale": "Three criteria are clearly documented, and the evaluation count is within the limit. The remaining judgment is whether the requested frequency is 'standard', which the policy does not quantify, so a nurse should confirm it. Confidence is a self-reported estimate, not measured accuracy. SYNTHETIC DEMO."
+}

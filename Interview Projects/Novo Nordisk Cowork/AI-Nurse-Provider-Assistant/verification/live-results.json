@@ -1,0 +1,42 @@
+[
+  {
+    "sample": "A_pt_eval_auto_approve.txt",
+    "request_id": "PA-20260925-0001",
+    "status": "queued_for_review",
+    "pathway": "standard_review",
+    "decision": null,
+    "seconds": 22.3
+  },
+  {
+    "sample": "B_mri_lumbar_incomplete.txt",
+    "request_id": "PA-20260925-0002",
+    "status": "queued_for_review",
+    "pathway": "standard_review",
+    "decision": null,
+    "seconds": 23.1
+  },
+  {
+    "sample": "C_knee_arthroscopy_fast_track.txt",
+    "request_id": "PA-20260925-0003",
+    "status": "queued_for_review",
+    "pathway": "standard_review",
+    "decision": null,
+    "seconds": 26.1
+  },
+  {
+    "sample": "D_bariatric_standard_review.txt",
+    "request_id": "PA-20260925-0004",
+    "status": "queued_for_review",
+    "pathway": "standard_review",
+    "decision": null,
+    "seconds": 31.1
+  },
+  {
+    "sample": "E_cta_chest_urgent_stat.txt",
+    "request_id": "PA-20260925-0005",
+    "status": "queued_for_review",
+    "pathway": "urgent",
+    "decision": null,
+    "seconds": 23.1
+  }
+]

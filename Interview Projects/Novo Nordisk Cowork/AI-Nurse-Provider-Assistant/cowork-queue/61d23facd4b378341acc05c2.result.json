@@ -1,0 +1,17 @@
+{
+  "patient_id": "MEM-53201984",
+  "date_of_birth": "06/17/1968",
+  "diagnosis_codes": [
+    "R06.02",
+    "R00.0"
+  ],
+  "procedure_codes": [
+    "71275"
+  ],
+  "requesting_provider": "Dr. Anthony Reyes, MD \u2014 Cedar Grove Urgent Care",
+  "ordering_npi": "1837465920",
+  "clinical_notes": "56-year-old presents to urgent care with acute-onset dyspnea and pleuritic right-sided chest pain starting this morning, heart rate 118 bpm, SpO2 91% on room air. Recent 6-hour flight two days ago. D-dimer elevated at 2.1 ug/mL (reference <0.5). Wells score calculated at 6 (high probability for PE). No known contrast allergy. Renal function normal (creatinine 0.9). Provider is requesting STAT CT angiography of the chest to rule out pulmonary embolism given high clinical suspicion and risk of clinical deterioration if diagnosis is delayed.",
+  "urgency": "stat",
+  "confidence_score": 0.85,
+  "extraction_notes": "Synthetic demo record. The sender explicitly marks the request STAT ('URGENT / STAT'; patient in urgent care with acute symptoms). The source is a transcribed fax, but the text is clear. Inconsistency: the notes say '56-year-old', but DOB 06/17/1968 implies age 58 in 2026; both are recorded as written. Confidence is a self-reported estimate, not measured accuracy."
+}

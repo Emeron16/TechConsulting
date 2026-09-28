@@ -1,0 +1,20 @@
+{
+  "job_id": "e26f2d24adacf3b5e28e3f3a",
+  "status": "completed",
+  "created_at": 1790455537.9578292,
+  "synthetic_demo_only": true,
+  "format": "text",
+  "schema": null,
+  "messages": [
+    {
+      "role": "system",
+      "content": "You draft prior-authorization decision letters for a health plan. Write a clear, professional letter to the requesting provider stating the decision (approved or denied), the request details, and \u2014 for approvals \u2014 the authorization validity, or \u2014 for denials \u2014 the specific unmet criteria relied upon, plus a standard appeal-rights paragraph (providers/members may appeal within 180 days; expedited appeals available for urgent cases). Label it SYNTHETIC DEMO \u2014 DRAFT, NOT SENT. Clearly identify all appeal or authorization validity language as illustrative demo terms, not real coverage guidance. Keep it under 220 words. Sign off as \"Prior Authorization Team, [Regional Health Plan \u2014 Demo]\"."
+    },
+    {
+      "role": "user",
+      "content": "Request ID: PA-20260925-0004\nDecision: DENIED\nReviewer: Prince\nReviewer notes:  The evaluation results are not in the packet and its status is 'in progress, pending scheduling'\nPatient ID: MEM-90213877\nRequesting provider: Dr. Priya Nair, MD \u2014 Metro Bariatric & Surgical Center\nProcedure code(s): 43644\nDiagnosis code(s): E66.01, E11.9, G47.33\nApplicable policy: BARIATRIC-001 \u2014 Laparoscopic Roux-en-Y Gastric Bypass\nUnmet criteria relied upon (for denials):\n- BARIATRIC-001 psychological evaluation clearance: not documented. The evaluation results are not in the packet and its status is 'in progress, pending scheduling'. This is missing documentation, not a documented failure to clear."
+    }
+  ],
+  "started_at": 1790455538.4234838,
+  "finished_at": 1790455549.1609807
+}

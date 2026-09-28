@@ -1,0 +1,8 @@
+{
+  "image_ocr": "extracted PT request and procedure code",
+  "pages/1_New_Request.py": "renders",
+  "pages/2_Nurse_Dashboard.py": "renders",
+  "pages/3_Provider_Portal.py": "renders",
+  "pages/4_Analytics_Audit.py": "renders",
+  "reset": "isolated database cleared and backup retained the original request"
+}

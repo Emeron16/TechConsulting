@@ -1,0 +1,97 @@
+{
+  "job_id": "45d1b0be4581946b40215a76",
+  "status": "completed",
+  "created_at": 1790354529.399256,
+  "synthetic_demo_only": true,
+  "format": "ExtractedRequest",
+  "schema": {
+    "description": "Structured fields pulled from the raw intake document (Component 1: Intelligent\nDocument Intake). Diagnosis/procedure codes must be taken verbatim, never inferred.",
+    "properties": {
+      "patient_id": {
+        "description": "Patient identifier as it appears in the document",
+        "title": "Patient Id",
+        "type": "string"
+      },
+      "date_of_birth": {
+        "description": "Patient date of birth, as written in the document",
+        "title": "Date Of Birth",
+        "type": "string"
+      },
+      "diagnosis_codes": {
+        "description": "ICD-10 codes exactly as they appear, never inferred",
+        "items": {
+          "type": "string"
+        },
+        "title": "Diagnosis Codes",
+        "type": "array"
+      },
+      "procedure_codes": {
+        "description": "CPT/HCPCS codes exactly as they appear in the request",
+        "items": {
+          "type": "string"
+        },
+        "title": "Procedure Codes",
+        "type": "array"
+      },
+      "requesting_provider": {
+        "description": "Name of the requesting/treating provider",
+        "title": "Requesting Provider",
+        "type": "string"
+      },
+      "ordering_npi": {
+        "default": "",
+        "description": "Ordering provider NPI, if present",
+        "title": "Ordering Npi",
+        "type": "string"
+      },
+      "clinical_notes": {
+        "description": "Verbatim relevant clinical narrative preserved from the document",
+        "title": "Clinical Notes",
+        "type": "string"
+      },
+      "urgency": {
+        "description": "routine / urgent / stat, inferred from clinical context",
+        "enum": [
+          "routine",
+          "urgent",
+          "stat"
+        ],
+        "title": "Urgency",
+        "type": "string"
+      },
+      "confidence_score": {
+        "description": "Extraction confidence (document/OCR clarity), as a number from 0.0 to 1.0",
+        "title": "Confidence Score",
+        "type": "number"
+      },
+      "extraction_notes": {
+        "default": "",
+        "description": "Anything ambiguous or low-confidence about this extraction",
+        "title": "Extraction Notes",
+        "type": "string"
+      }
+    },
+    "required": [
+      "patient_id",
+      "date_of_birth",
+      "requesting_provider",
+      "clinical_notes",
+      "urgency",
+      "confidence_score"
+    ],
+    "title": "ExtractedRequest",
+    "type": "object"
+  },
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are the document-intake extraction agent in a prior-authorization pipeline for a regional health plan. You will be given the raw text of a prior authorization request (from a fax, PDF, portal submission, or provider upload).\n\nExtract the structured fields exactly as specified. Rules:\n- Diagnosis codes (ICD-10) and procedure codes (CPT/HCPCS) must be taken VERBATIM from the text. Never infer or guess a code that is not explicitly written down. If none are present, return an empty list for that field.\n- Preserve the clinically relevant narrative verbatim in clinical_notes (you may trim obvious boilerplate/header noise, but do not paraphrase clinical content).\n- urgency must reflect what the document actually says or clearly implies (e.g. \"STAT\", \"urgent\", explicit time pressure) \u2014 default to \"routine\" if nothing indicates otherwise.\n- confidence_score reflects how clearly and unambiguously the document text supports this extraction (document/OCR clarity), NOT your opinion of the clinical case. Use lower scores if text is garbled, fields are ambiguous, or required fields are simply absent.\n- Use extraction_notes to flag anything ambiguous, contradictory, or low-confidence.\n"
+    },
+    {
+      "role": "user",
+      "content": "Raw intake document text:\n\n*** PROVIDER UPLOAD \u2014 PRIOR AUTHORIZATION REQUEST ***\nSubmitted via Provider Portal (clinical packet)\n\nPatient ID: MEM-90213877\nPatient Name: L. Fitzgerald (synthetic demo patient)\nDate of Birth: 11/02/1974\n\nRequesting Provider: Dr. Priya Nair, MD \u2014 Metro Bariatric & Surgical Center\nOrdering NPI: 1509283746\n\nDiagnosis Code(s): E66.01 (Morbid obesity due to excess calories), E11.9 (Type 2 diabetes\nmellitus without complications), G47.33 (Obstructive sleep apnea)\nProcedure Code(s) Requested: 43644 (Laparoscopic Roux-en-Y gastric bypass)\n\nUrgency: Routine\n\nClinical Notes:\n51-year-old with BMI 38.2, type 2 diabetes (HbA1c 8.1%, managed with metformin and glargine),\nand obstructive sleep apnea on CPAP. Patient participated in a physician-supervised weight\nmanagement program for 4 months in 2025 (nutrition counseling notes on file) with modest\nweight loss (~6 lbs) followed by regain. Patient reports multiple prior diet attempts over 10\nyears without sustained success. Surgeon recommends laparoscopic Roux-en-Y gastric bypass given\nBMI plus comorbid diabetes and OSA.\n\nA psychological evaluation was scheduled but the results are not yet included in this packet;\noffice notes indicate the evaluation is \"in progress, pending scheduling.\" Patient has a\nhistory of mild depression, stable on sertraline for 3 years per PCP records, no active\neating disorder documented. Family history of complications from bariatric surgery in a\nsibling is noted by the patient as a concern to discuss.\n"
+    }
+  ],
+  "started_at": 1790354529.8864598,
+  "finished_at": 1790354543.6384158
+}

@@ -1,0 +1,27 @@
+{
+  "policy_id": "KNEE-ARTHRO-001",
+  "title": "Knee Arthroscopy with Meniscectomy",
+  "source": "InterQual Surgical Criteria (synthetic)",
+  "cpt_codes": ["29881", "29880"],
+  "auto_approvable": false,
+  "low_cost": false,
+  "required_documentation": [
+    {
+      "item": "conservative_treatment",
+      "keywords": ["physical therapy", "conservative treatment", "nsaid", "activity modification", "injection"],
+      "description": "Documentation of a conservative treatment trial (PT, NSAIDs, activity modification, and/or injection) prior to surgery, unless locking/instability is present."
+    },
+    {
+      "item": "imaging_confirmation",
+      "keywords": ["mri", "meniscal tear", "meniscus tear", "imaging showed", "imaging confirms"],
+      "description": "Imaging (typically MRI) confirming a meniscal tear or other structural abnormality consistent with the requested procedure."
+    }
+  ],
+  "criteria": [
+    "Imaging (MRI preferred) confirms a meniscal tear or structural abnormality consistent with the patient's symptoms.",
+    "A conservative treatment trial (physical therapy, NSAIDs, activity modification, and/or corticosteroid injection) of at least 4-6 weeks has been attempted and failed, OR mechanical locking/instability is documented.",
+    "Symptoms (pain, swelling, mechanical locking, or instability) are significant enough to functionally limit the patient.",
+    "No absolute surgical contraindication documented in the record."
+  ],
+  "notes": "Synthetic policy created for this demo; not an actual InterQual criterion."
+}

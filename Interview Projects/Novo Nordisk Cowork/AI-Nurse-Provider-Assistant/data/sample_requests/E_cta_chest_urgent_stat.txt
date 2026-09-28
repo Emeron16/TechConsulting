@@ -1,0 +1,22 @@
+*** FAX TRANSMISSION — PRIOR AUTHORIZATION REQUEST — STAT ***
+Fax received: (unstructured scan, transcribed) — marked "URGENT / STAT" by sender
+
+Patient ID: MEM-53201984
+Patient Name: D. Okafor (synthetic demo patient)
+Date of Birth: 06/17/1968
+
+Requesting Provider: Dr. Anthony Reyes, MD — Cedar Grove Urgent Care
+Ordering NPI: 1837465920
+
+Diagnosis Code(s): R06.02 (Shortness of breath), R00.0 (Tachycardia)
+Procedure Code(s) Requested: 71275 (CT angiography, chest, for suspected pulmonary embolism)
+
+Urgency: STAT — patient in urgent care with acute symptoms, requesting immediate authorization
+
+Clinical Notes:
+56-year-old presents to urgent care with acute-onset dyspnea and pleuritic right-sided chest
+pain starting this morning, heart rate 118 bpm, SpO2 91% on room air. Recent 6-hour flight two
+days ago. D-dimer elevated at 2.1 ug/mL (reference <0.5). Wells score calculated at 6 (high
+probability for PE). No known contrast allergy. Renal function normal (creatinine 0.9). Provider
+is requesting STAT CT angiography of the chest to rule out pulmonary embolism given high
+clinical suspicion and risk of clinical deterioration if diagnosis is delayed.

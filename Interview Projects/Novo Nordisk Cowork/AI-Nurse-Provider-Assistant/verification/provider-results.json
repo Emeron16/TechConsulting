@@ -1,0 +1,16 @@
+{
+  "supplement": {
+    "status": "queued_for_review",
+    "pathway": "standard_review"
+  },
+  "provider_final_letters": "approval and denial rendered",
+  "pdf_intake": {
+    "request_id": "PA-20260925-0006",
+    "status": "information_requested"
+  },
+  "unambiguous_pt": {
+    "request_id": "PA-20260925-0007",
+    "status": "queued_for_review",
+    "pathway": "standard_review"
+  }
+}

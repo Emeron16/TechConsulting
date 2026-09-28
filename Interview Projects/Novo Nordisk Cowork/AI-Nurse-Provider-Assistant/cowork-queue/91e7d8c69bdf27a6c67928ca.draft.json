@@ -1,0 +1,34 @@
+{
+  "patient_summary": "Synthetic demo patient MEM-90213877 (L. Fitzgerald), 51, with BMI 38.2 (E66.01), type 2 diabetes with HbA1c 8.1% on metformin and glargine (E11.9), and obstructive sleep apnea on CPAP (G47.33). The patient has a history of mild depression, stable on sertraline for 3 years, with no active eating disorder documented.",
+  "request_summary": "Dr. Priya Nair, MD (Metro Bariatric & Surgical Center) requests routine laparoscopic Roux-en-Y gastric bypass (43644), citing BMI plus comorbid diabetes and OSA after unsuccessful non-surgical weight loss.",
+  "recommendation": "needs_review",
+  "confidence": 0.8,
+  "met_criteria": [
+    "BARIATRIC-001: BMI >= 35 with a qualifying comorbidity. BMI 38.2 with type 2 diabetes and obstructive sleep apnea.",
+    "BARIATRIC-001: Physician-supervised weight management program within the past 2 years. A 4-month program in 2025 is documented (the nutrition counseling notes are referenced as 'on file' but not included).",
+    "BARIATRIC-001: Prior non-surgical attempts insufficient. There was about 6 lbs of loss then regain after the program, and multiple diet attempts over 10 years without sustained success.",
+    "BARIATRIC-001: No absolute contraindication documented. No substance use disorder or bleeding disorder is noted."
+  ],
+  "unmet_criteria": [
+    "BARIATRIC-001 psychological evaluation clearance: not documented. The evaluation results are not in the packet and its status is 'in progress, pending scheduling'. This is missing documentation, not a documented failure to clear."
+  ],
+  "reviewer_focus_areas": [
+    "Request the completed psychological evaluation showing surgical clearance. The criterion cannot be assessed until it is received.",
+    "Confirm the psychological evaluation status. The packet says it was 'scheduled' and also 'pending scheduling'.",
+    "Should the 'on file' nutrition counseling notes be obtained to verify the supervised program?",
+    "The patient-raised concern about a sibling's bariatric complications is not a policy criterion, but it may be relevant to informed consent. Note it for the care team."
+  ],
+  "citations": [
+    "BARIATRIC-001: BMI >= 40, OR BMI >= 35 with at least one qualifying comorbidity (e.g., type 2 diabetes, hypertension, obstructive sleep apnea).",
+    "BARIATRIC-001: Completion of a physician-supervised weight management program (nutrition counseling, documented attempts at weight loss) within the past 2 years.",
+    "BARIATRIC-001: A psychological evaluation has cleared the patient for surgery, with no untreated eating disorder or unmanaged severe psychiatric illness noted.",
+    "BARIATRIC-001: Prior non-surgical weight-loss attempts have been insufficient to achieve or maintain a healthy weight given the patient's comorbidities.",
+    "BARIATRIC-001: No absolute contraindication to bariatric surgery (e.g., active substance use disorder, unmanaged bleeding disorder) documented."
+  ],
+  "risk_flags": [
+    "Internal inconsistency in psychological evaluation status ('scheduled' vs 'pending scheduling').",
+    "Supporting nutrition counseling documentation is referenced but not attached."
+  ],
+  "estimated_review_minutes": 20,
+  "rationale": "Four of five criteria are supported. The required psychological clearance is absent from the packet and described as pending, so the case is incomplete rather than clearly failing. A request for the evaluation fits before any determination, and a nurse decides. Confidence is a self-reported estimate, not measured accuracy. SYNTHETIC DEMO."
+}

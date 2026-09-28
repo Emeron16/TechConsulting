@@ -1,0 +1,20 @@
+[
+  {
+    "request_id": "PA-20260925-0001",
+    "action": "approved",
+    "status": "decided",
+    "letter_saved": true
+  },
+  {
+    "request_id": "PA-20260925-0002",
+    "action": "information_requested",
+    "status": "information_requested",
+    "letter_saved": true
+  },
+  {
+    "request_id": "PA-20260925-0003",
+    "action": "denied",
+    "status": "decided",
+    "letter_saved": true
+  }
+]

@@ -1,0 +1,28 @@
+{
+  "patient_summary": "Synthetic demo patient MEM-77102934 (R. Nakamura) with low back pain (M54.5) and 7 weeks of left-sided radicular symptoms into the buttock and posterior thigh, worse over the last 2 weeks. Bowel/bladder dysfunction, fever, weight loss, cancer history and trauma are all documented as absent.",
+  "request_summary": "Dr. Michael Ortiz, MD (Summit Family Medicine) requests a routine MRI lumbar spine without contrast (72148) to evaluate a structural cause of persistent radiculopathy.",
+  "recommendation": "needs_review",
+  "confidence": 0.7,
+  "met_criteria": [
+    "MRI-LUMBAR-001: Low back pain with radiculopathy or neurological symptoms present for at least 6 weeks. 7 weeks of radiculopathy symptoms are documented.",
+    "MRI-LUMBAR-001: No absolute contraindication to MRI documented in the record. None is documented, although the note does not state that screening was done."
+  ],
+  "unmet_criteria": [
+    "MRI-LUMBAR-001 conservative treatment (PT and/or NSAIDs/analgesics for at least 6 weeks): not documented. The submission states that no PT, medication trial or other conservative management was provided. This is missing documentation, not a documented treatment failure or refusal.",
+    "MRI-LUMBAR-001 red-flag pathway: not applicable. Red flags are documented as absent, so the conservative-treatment requirement is not waived."
+  ],
+  "reviewer_focus_areas": [
+    "Was at least 6 weeks of conservative treatment (PT, NSAIDs/analgesics) actually tried? A request for records is appropriate before any adverse determination.",
+    "Does the worsening over the past 2 weeks involve any new neurological deficit that would change the red-flag assessment?",
+    "Confirm there is no MRI contraindication (implant, severe claustrophobia)."
+  ],
+  "citations": [
+    "MRI-LUMBAR-001: Low back pain with radiculopathy or neurological symptoms present for at least 6 weeks.",
+    "MRI-LUMBAR-001: OR red-flag symptoms present (cauda equina syndrome, progressive neurological deficit, suspected malignancy or infection, significant trauma) \u2014 conservative treatment is not required in this case.",
+    "MRI-LUMBAR-001: Conservative treatment (physical therapy and/or NSAIDs/analgesics) attempted for at least 6 weeks, unless red flags above are present.",
+    "MRI-LUMBAR-001: No absolute contraindication to MRI (e.g., non-MRI-compatible implant, severe claustrophobia without sedation plan) documented in the record."
+  ],
+  "risk_flags": [],
+  "estimated_review_minutes": 12,
+  "rationale": "Symptom duration is documented and no red flags are present, so conservative treatment is required. The record is silent on it: the gap is absent documentation, not documented non-compliance. A records request fits better than a denial recommendation, and a nurse must decide the next step. Confidence is a self-reported estimate, not measured accuracy. SYNTHETIC DEMO."
+}

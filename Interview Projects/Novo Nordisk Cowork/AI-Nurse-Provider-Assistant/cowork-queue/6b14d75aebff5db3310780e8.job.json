@@ -1,0 +1,106 @@
+{
+  "job_id": "6b14d75aebff5db3310780e8",
+  "status": "completed",
+  "created_at": 1790451330.7523332,
+  "synthetic_demo_only": true,
+  "format": "PolicyAnalysis",
+  "schema": {
+    "description": "Component 3 (Policy RAG) + Component 5 (Nurse Dashboard) combined: the model produces\na structured analysis AND the nurse-facing summaries in one call, since both draw on the\nsame read of the record. The AI never outputs a final approve/deny decision here.",
+    "properties": {
+      "patient_summary": {
+        "description": "2-3 sentence patient context: diagnosis, history",
+        "title": "Patient Summary",
+        "type": "string"
+      },
+      "request_summary": {
+        "description": "What is being requested, why, and by whom",
+        "title": "Request Summary",
+        "type": "string"
+      },
+      "recommendation": {
+        "enum": [
+          "likely_approve",
+          "needs_review",
+          "likely_deny"
+        ],
+        "title": "Recommendation",
+        "type": "string"
+      },
+      "confidence": {
+        "description": "Confidence in the recommendation, from 0.0 to 1.0",
+        "title": "Confidence",
+        "type": "number"
+      },
+      "met_criteria": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Met Criteria",
+        "type": "array"
+      },
+      "unmet_criteria": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Unmet Criteria",
+        "type": "array"
+      },
+      "reviewer_focus_areas": {
+        "description": "Specific questions the nurse should answer",
+        "items": {
+          "type": "string"
+        },
+        "title": "Reviewer Focus Areas",
+        "type": "array"
+      },
+      "citations": {
+        "description": "Policy IDs / criterion text referenced",
+        "items": {
+          "type": "string"
+        },
+        "title": "Citations",
+        "type": "array"
+      },
+      "risk_flags": {
+        "description": "Fraud indicators, contradictions, regulatory concerns",
+        "items": {
+          "type": "string"
+        },
+        "title": "Risk Flags",
+        "type": "array"
+      },
+      "estimated_review_minutes": {
+        "description": "Realistic nurse review time in minutes, from 1 to 60",
+        "title": "Estimated Review Minutes",
+        "type": "integer"
+      },
+      "rationale": {
+        "description": "Brief explanation supporting the recommendation",
+        "title": "Rationale",
+        "type": "string"
+      }
+    },
+    "required": [
+      "patient_summary",
+      "request_summary",
+      "recommendation",
+      "confidence",
+      "estimated_review_minutes",
+      "rationale"
+    ],
+    "title": "PolicyAnalysis",
+    "type": "object"
+  },
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are the clinical policy analysis agent in a prior-authorization pipeline. You provide STRUCTURED ANALYSIS ONLY \u2014 you never issue a final approval or denial. A human nurse reviewer always makes the final call (except for a small set of pre-approved low-risk auto-approval cases, which is decided outside of you by a separate routing step).\n\nYou will be given the extracted request data and the applicable policy's criteria (with a policy ID for citation). Determine:\n- Which specific criteria are clearly met by the documentation, and which are unmet or unclear.\n- A recommendation: \"likely_approve\" (criteria clearly met), \"needs_review\" (mixed/ambiguous or minor gaps), or \"likely_deny\" (criteria clearly not met and no red flags requiring urgent override).\n- A confidence score (0-1) in that recommendation.\n- reviewer_focus_areas: the specific questions a nurse should answer to finalize the decision.\n- citations: reference the policy_id and the specific criterion text you relied on.\n- risk_flags: anything suggesting fraud, internal contradiction, or a regulatory concern \u2014 leave empty if none.\n- estimated_review_minutes: a realistic nurse review time (5-8 min for clear-cut cases, up to 20-30 for complex ones), reflecting how much independent judgment is really required.\n- patient_summary and request_summary: concise, factual, written for a nurse skimming a queue.\n\nBe conservative: never claim a criterion is met unless the documentation actually supports it.\n"
+    },
+    {
+      "role": "user",
+      "content": "Extracted request:\n- Patient ID: MEM-88213456\n- Diagnosis codes: M54.5\n- Procedure codes: 97110\n- Requesting provider: Dr. Karen Wu, DPT - Lakeside Physical Therapy Group\n- Urgency: routine\n- Clinical notes: Patient is a 46-year-old referred by PCP Dr. Sandra Lee for outpatient physical therapy evaluation and treatment of mechanical low back pain. Patient reports 3 weeks of dull low back pain with difficulty bending and prolonged sitting, rating pain 4/10. No radiation to legs, no numbness or weakness, no bowel/bladder changes, no history of trauma or malignancy. Requesting initial evaluation plus standard course of therapeutic exercise, 2x/week for 4 weeks (8 visits total). No red-flag symptoms present on review of systems. Requested visits: 1 evaluation + 8 treatment visits.\n\nApplicable policy: PT-EVAL-001 \u2014 Outpatient Physical Therapy Evaluation and Treatment (source: Plan Medical Policy (synthetic, modeled on MCG-style outpatient rehab guidelines))\nCriteria:\n- A qualified provider has referred the patient for physical therapy evaluation and/or treatment.\n- The clinical notes describe a functional limitation (pain, weakness, reduced range of motion, or difficulty with activities of daily living) related to the diagnosis.\n- No more than 3 initial evaluation visits and standard treatment frequency are being requested (higher frequency/duration requests route to standard review).\n- No red flags requiring urgent escalation (e.g., acute neurological deficit, suspected fracture) are present."
+    }
+  ],
+  "started_at": 1790451331.5929084,
+  "finished_at": 1790451340.9716685
+}
