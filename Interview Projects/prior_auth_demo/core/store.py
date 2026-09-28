@@ -1,6 +1,6 @@
 """SQLite persistence: the `requests` table (one row per prior-auth request, tracking status
 across the whole lifecycle) and the `audit_log` table (the PDF's "Complete Audit Trail" control
-— every AI inference and every human decision, immutable/append-only in this demo).
+— every AI inference and every human decision, append-only during normal use; demo reset archives then clears records).
 """
 from __future__ import annotations
 
@@ -176,3 +176,20 @@ def list_audit(request_id: str | None = None) -> list[dict]:
     with _connect() as conn:
         rows = conn.execute(query, params).fetchall()
     return [dict(r) for r in rows]
+
+
+def reset_demo_data() -> str:
+    """Archive the database, then atomically clear demo requests and audit records."""
+    backup_dir = DATA_DIR / "backups"
+    backup_dir.mkdir(parents=True, exist_ok=True)
+    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
+    backup_path = backup_dir / f"demo-before-reset-{stamp}.db"
+    # Hold the write reservation while taking a consistent backup via a reader.
+    with _connect() as conn:
+        conn.execute("BEGIN IMMEDIATE")
+        with sqlite3.connect(DB_PATH) as reader, sqlite3.connect(backup_path) as backup:
+            reader.backup(backup)
+        conn.execute("DELETE FROM audit_log")
+        conn.execute("DELETE FROM requests")
+        conn.execute("DELETE FROM sqlite_sequence WHERE name = 'audit_log'")
+    return str(backup_path)

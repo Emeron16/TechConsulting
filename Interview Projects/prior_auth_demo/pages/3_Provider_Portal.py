@@ -7,15 +7,32 @@ from core.config import require_client_or_stop
 from core.pipeline import run_pipeline
 from core.schemas import ExtractedRequest, RiskRouting
 
-st.set_page_config(page_title="Provider Portal — Prior Auth Demo", page_icon="🌐", layout="wide")
+st.set_page_config(page_title="Request Status — Provider Workspace", page_icon="🌐", layout="wide")
 require_client_or_stop()
 
-st.title("🌐 Provider Portal")
-st.caption(
-    "Component 6 of the proposal: providers self-serve status instead of calling. Uploading "
-    "additional documentation here automatically triggers re-validation — no nurse involved "
-    "unless it's still incomplete or ready for review."
-)
+st.html("""
+<style>
+.stApp:has(.pp-page), .stApp:has(.pp-page) [data-testid="stHeader"] { background: #f4f7f9; }
+.stApp:has(.pp-page) .block-container { max-width: 1100px; padding: 32px; margin-top: 2rem; margin-bottom: 3rem; background: white; border-radius: 20px; box-sizing: border-box; }
+.stApp:has(.pp-page) [data-testid="stSidebar"] { background: #eaf0f3; border-right: 1px solid #d9e3e8; }
+.pp-hero { background: linear-gradient(120deg, #113c49, #176d72); border-radius: 22px; padding: 32px 36px; margin-bottom: 12px; }
+.pp-hero .pp-eyebrow { color: #bce5df; text-transform: uppercase; font-size: 12px; font-weight: 700; letter-spacing: .12em; }
+.pp-hero h1 { color: white; font-size: 36px; margin: 0; padding: 0; }
+.pp-hero p { color: #e2f0f0; line-height: 1.7; }
+
+.stApp:has(.pp-page) [data-testid="stTextArea"] textarea { background: white; color: #253d49; }
+.stApp:has(.pp-page) button[kind="primary"] { background: #176d72; border-color: #176d72; }
+@media (max-width: 650px) { .stApp:has(.pp-page) .block-container { padding: 20px; } .pp-hero { padding: 24px; } }
+</style>
+<div class="pp-page pp-hero">
+<p class="pp-eyebrow">Provider workspace · Synthetic demo</p>
+<h1>Request Status</h1>
+<p>Track submitted requests, respond to information requests, and view decision letters.</p>
+</div>
+""")
+if st.button("Submit a new request", key="portal_new_request"):
+    st.switch_page("pages/1_New_Request.py")
+st.caption("This demo shows all synthetic requests. Select a request to follow its progress.")
 
 all_requests = store.list_requests()
 if not all_requests:
@@ -23,7 +40,8 @@ if not all_requests:
     st.stop()
 
 options = {r["id"]: f"{r['id']} — {r['status'].replace('_', ' ')}" for r in all_requests}
-default_id = st.session_state.get("recent_requests", [None])[0] or list(options.keys())[0]
+recent_ids = st.session_state.get("recent_requests") or []
+default_id = next((rid for rid in recent_ids if rid in options), next(iter(options)))
 request_id = st.selectbox(
     "Request ID",
     options=list(options.keys()),
@@ -43,12 +61,14 @@ STATUS_LABELS = {
 }
 current_status = row["status"] if row["status"] in STATUS_STEPS else "submitted"
 
-st.divider()
-cols = st.columns(len(STATUS_STEPS))
-current_idx = STATUS_STEPS.index(current_status)
-for i, (col, step) in enumerate(zip(cols, STATUS_STEPS)):
-    marker = "✅" if i < current_idx else ("🟢" if i == current_idx else "⬜")
-    col.markdown(f"**{marker} {STATUS_LABELS[step]}**")
+with st.container(border=True):
+    st.subheader(STATUS_LABELS[current_status])
+    st.caption({
+        "submitted": "Your request has been received.",
+        "information_requested": "Action needed: review the letter and provide additional documentation below.",
+        "queued_for_review": "Your request is awaiting review by the health plan.",
+        "decided": "A decision is available. Read or download the letter below.",
+    }[current_status])
 
 st.divider()
 c1, c2 = st.columns(2)
@@ -61,7 +81,7 @@ with c1:
 with c2:
     st.markdown("**Status**")
     st.write(f"Current status: **{STATUS_LABELS[current_status]}**")
-    if row.get("routing_json"):
+    if row.get("routing_json") and current_status == "queued_for_review":
         routing = RiskRouting.model_validate_json(row["routing_json"])
         st.write(f"Pathway: `{routing.pathway}` — SLA {routing.sla_hours:g}h")
         submitted_at = datetime.fromisoformat(row["created_at"])
@@ -73,7 +93,7 @@ st.divider()
 if current_status == "information_requested":
     st.subheader("📨 Missing / additional information requested")
     st.text_area("Letter from the health plan", value=row.get("missing_info_letter") or "", height=180, disabled=True)
-    st.markdown("**Simulate: upload the requested documentation**")
+    st.markdown("**Provide the requested documentation as text**")
     addition = st.text_area(
         "Additional documentation / clarifying notes from the provider",
         placeholder="e.g. Patient completed 6 weeks of physical therapy and NSAIDs from 3/1/2026 to 4/12/2026 without improvement...",

@@ -8,69 +8,52 @@ from core.config import require_client_or_stop
 st.set_page_config(page_title="Analytics & Audit — Prior Auth Demo", page_icon="📊", layout="wide")
 require_client_or_stop()
 
-st.title("📊 Analytics & Audit")
-st.caption(
-    "The proposal's projected outcomes (static, from the blueprint) alongside this session's "
-    "live activity, plus the immutable audit trail required for clinical governance."
-)
+st.html("""
+<style>
+.stApp:has(.aa-page), .stApp:has(.aa-page) [data-testid="stHeader"] { background: #f4f7f9; }
+.stApp:has(.aa-page) .block-container { max-width: 1300px; padding: 32px; margin-top: 2rem; margin-bottom: 3rem; background: white; border-radius: 20px; box-sizing: border-box; }
+.stApp:has(.aa-page) [data-testid="stSidebar"] { background: #eaf0f3; border-right: 1px solid #d9e3e8; }
+.aa-hero { background: linear-gradient(120deg, #113c49, #176d72); border-radius: 20px; padding: 30px 34px; margin-bottom: 16px; }
+.aa-hero .eyebrow { color: #bce5df; text-transform: uppercase; font-size: 12px; font-weight: 700; letter-spacing: .12em; }
+.aa-hero h1 { color: white; font-size: 36px; margin: 0; padding: 0; }
+.aa-hero p { color: #e2f0f0; line-height: 1.7; }
+.aa-section { padding: 18px 22px; border-radius: 12px; background: #edf3fc; margin: 12px 0; }
+.aa-section.live { background: #e6f3ee; }
+.aa-section.audit { background: #fff3dd; }
+.aa-section h2 { color: #234b59; font-size: 23px; margin: 0; padding: 0; }
+.aa-section p { color: #506571; margin: 8px 0 0; font-size: 14px; }
+.stApp:has(.aa-page) [data-testid="stMetric"] { background: #edf6f4; border: 1px solid #d8e8e3; border-radius: 12px; padding: 16px; }
+@media(max-width: 650px) { .stApp:has(.aa-page) .block-container { padding: 18px; } .aa-hero { padding: 22px; } }
+</style>
+<div class="aa-page aa-hero"><p class="eyebrow">Health plan workspace · Synthetic demo</p>
+<h1>Analytics &amp; Audit</h1><p>Monitor saved demo request activity and review recorded processing events.</p></div>
+""")
 
-# ---------------------------------------------------------------------------
-# 1. Proposal's projected outcomes — static reference, NOT live data.
-#    One metric per chart (single axis each) since turnaround (days), rework (%),
-#    and auto-approval (%) are different units — never combined on one scale.
-# ---------------------------------------------------------------------------
-st.subheader("Proposal's projected outcomes (Blueprint, pages 9-10 — not live data)")
+if st.session_state.pop("demo_reset_complete", False):
+    st.success("Demo reset complete. Requests and audit entries were cleared; a database backup was saved.")
 
-STAGES = ["Current", "Phase 1\n(mo. 1-3)", "Phase 2\n(mo. 4-6)", "Phase 3\n(mo. 7-9)"]
-# Ordinal sequential-blue ramp, darkening with each phase (per dataviz skill's ordinal-ramp rule).
-ORDINAL_BLUES = ["#86b6ef", "#5598e7", "#2a78d6", "#184f95"]
-
-
-def ordinal_bar(title: str, values: list[float], suffix: str = "") -> go.Figure:
-    fig = go.Figure(
-        go.Bar(
-            x=STAGES,
-            y=values,
-            marker_color=ORDINAL_BLUES,
-            text=[f"{v:g}{suffix}" for v in values],
-            textposition="outside",
-        )
-    )
-    fig.update_layout(
-        title=title,
-        template="plotly_white",
-        showlegend=False,
-        margin=dict(t=48, b=8, l=8, r=8),
-        height=280,
-        yaxis=dict(showgrid=True, gridcolor="#e1e0d9", zeroline=False),
-        xaxis=dict(showgrid=False),
-    )
-    return fig
-
-
-c1, c2, c3 = st.columns(3)
-with c1:
-    st.plotly_chart(ordinal_bar("Turnaround time (days)", [4.2, 2.7, 2.2, 2.5]), use_container_width=True)
-with c2:
-    st.plotly_chart(ordinal_bar("Rework rate", [22, 12, 8, 5], suffix="%"), use_container_width=True)
-with c3:
-    st.plotly_chart(ordinal_bar("Auto-approved", [0, 0, 15, 35], suffix="%"), use_container_width=True)
-
-st.caption(
-    "Source: proposal blueprint. This demo implements the architecture; it does not have "
-    "9 months of production volume to reproduce these figures live."
-)
-
-st.divider()
+with st.expander("Start a fresh demo"):
+    st.write("Clear all saved requests and audit entries across the demo. Sample documents and policies remain available. A database backup is saved before clearing.")
+    confirmed = st.checkbox("Clear all demo requests and audit history", key="confirm_demo_reset")
+    if st.button("Reset demo data", disabled=not confirmed, key="reset_demo_data"):
+        try:
+            store.reset_demo_data()
+        except Exception:
+            st.error("Reset failed. No reset was confirmed. Check database access and try again.")
+        else:
+            for key in list(st.session_state):
+                del st.session_state[key]
+            st.session_state["demo_reset_complete"] = True
+            st.rerun()
 
 # ---------------------------------------------------------------------------
 # 2. Live session metrics — from this session's actual pipeline runs.
 # ---------------------------------------------------------------------------
-st.subheader("This session's activity (live)")
+st.html('<div class="aa-section live"><h2>Demo request activity</h2><p>Current counts from requests saved in the demo database.</p></div>')
 
 requests = store.list_requests()
 if not requests:
-    st.info("No requests processed yet this session. Submit one on **New Request**.")
+    st.info("No requests processed yet. Submit one on **New Request**.")
 else:
     df = pd.DataFrame(requests)
     total = len(df)
@@ -80,7 +63,7 @@ else:
 
     m1, m2, m3, m4 = st.columns(4)
     m1.metric("Requests processed", total)
-    m2.metric("Rework rate (this session)", f"{rework_rate:.0f}%")
+    m2.metric("Awaiting information", f"{rework_rate:.0f}%")
     m3.metric("Auto-approved", auto_approved)
     m4.metric("Decided by a nurse", len(decided) - auto_approved if len(decided) else 0)
 
@@ -111,9 +94,12 @@ else:
         title="Requests by pathway",
         template="plotly_white",
         showlegend=False,
-        margin=dict(t=48, b=8, l=8, r=8),
-        height=320,
-        yaxis=dict(showgrid=True, gridcolor="#e1e0d9", zeroline=False, title="Count"),
+        margin=dict(t=64, b=64, l=50, r=24),
+        height=380,
+        font=dict(color="#294653", size=13),
+        paper_bgcolor="#f8fafc",
+        plot_bgcolor="#f8fafc",
+        yaxis=dict(showgrid=True, gridcolor="#e1e8ed", zeroline=False, title="Requests", dtick=1, range=[0, max(1, pathway_counts.max()) * 1.3]),
         xaxis=dict(showgrid=False),
     )
     st.plotly_chart(fig, use_container_width=True)
@@ -123,11 +109,7 @@ st.divider()
 # ---------------------------------------------------------------------------
 # 3. Audit trail — every AI inference + every human decision.
 # ---------------------------------------------------------------------------
-st.subheader("Audit trail")
-st.caption(
-    "Every AI inference (model, confidence, output summary) and every human decision, "
-    "append-only — the proposal's 'Complete Audit Trail' governance control."
-)
+st.html('<div class="aa-section audit"><h2>Audit trail</h2><p>Review recorded AI processing and human decisions. Filter by request or export the log.</p></div>')
 
 filter_id = st.selectbox(
     "Filter by request ID",
